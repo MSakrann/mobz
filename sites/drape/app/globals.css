@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+:root {
+  --drape-bg: #12191B;
+  --drape-surface: #1C3331;
+  --drape-accent: #3EC9A8;
+  --drape-text: #F0EFED;
+  --drape-muted: #C2BFB9;
+  --drape-dim: #7E7C78;
+  --drape-destructive: #F44336;
+}
+
+body {
+  background: var(--drape-bg);
+  color: var(--drape-text);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.drape-input {
+  margin-top: 0.5rem;
+  width: 100%;
+  height: 3rem;
+  border: 1px solid rgba(240, 239, 237, 0.15);
+  background: rgba(18, 25, 27, 0.45);
+  border-radius: 0.875rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--drape-text);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.drape-input:focus {
+  border-color: rgba(240, 239, 237, 0.4);
+  background: #12191B;
+}
+
+@keyframes drape-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.drape-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: drape-marquee 40s linear infinite;
+}
+
+.drape-plan-card {
+  position: relative;
+  transition:
+    transform 280ms ease,
+    border-color 280ms ease,
+    box-shadow 280ms ease;
+}
+
+.drape-plan-card:hover {
+  z-index: 1;
+  transform: scale(1.05);
+  border-color: var(--drape-accent);
+  box-shadow: 0 22px 48px -18px rgb(62 201 168 / 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drape-plan-card,
+  .drape-plan-card:hover {
+    transition: border-color 280ms ease, box-shadow 280ms ease;
+    transform: none;
+  }
+}
+
+*:focus-visible {
+  outline: 2px solid var(--drape-accent);
+  outline-offset: 2px;
+}
+
+.drape-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(240, 239, 237, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #f0efed;
+  cursor: pointer;
+  transition: background 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.drape-chip:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.drape-chip[aria-selected="true"],
+.drape-chip[aria-pressed="true"],
+.drape-chip[data-active="true"] {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(240, 239, 237, 0.35);
+}
+
+.drape-chip-arrow {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+}

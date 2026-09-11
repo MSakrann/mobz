@@ -1,0 +1,321 @@
+.mirror-hall {
+  position: relative;
+  height: 100lvh;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  color: #eaf1fb;
+  --accent: #7fd8ff;
+}
+
+.mirror-hall__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.mirror-hall__stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y;
+  cursor: default;
+}
+
+.mirror-hall__stage.-over-live,
+.mirror-hall__stage canvas.-over-live {
+  cursor: pointer;
+}
+
+.mirror-hall__stage canvas.-dragging {
+  cursor: grabbing;
+  touch-action: none;
+}
+
+.mirror-hall .css3d {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mirror-hall .card-hit {
+  display: block;
+  pointer-events: auto;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.mirror-hall .card-hit[aria-disabled="true"] {
+  pointer-events: none;
+  cursor: default;
+}
+
+.mirror-hall .card-label {
+  white-space: nowrap;
+  text-align: center;
+  text-transform: uppercase;
+  pointer-events: none;
+  -webkit-font-smoothing: antialiased;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+  backface-visibility: hidden;
+}
+
+.mirror-hall .hud {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  --accent: #7fd8ff;
+}
+
+.mirror-hall .hud * {
+  pointer-events: none;
+}
+
+.mirror-hall .hud .vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(130% 90% at 50% 42%, transparent 52%, rgba(2, 4, 9, 0.55) 100%),
+    linear-gradient(to bottom, rgba(2, 4, 9, 0.42) 0%, transparent 20%, transparent 62%, rgba(2, 4, 9, 0.62) 100%);
+}
+
+.mirror-hall .hud .frame {
+  position: absolute;
+  inset: clamp(14px, 2.4vh, 26px);
+  border: 1px solid rgba(160, 200, 255, 0.11);
+  border-radius: 3px;
+  box-shadow: inset 0 0 60px rgba(3, 6, 14, 0.5);
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+
+.mirror-hall .hud .frame::before,
+.mirror-hall .hud .frame::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 1px solid rgba(180, 214, 255, 0.5);
+}
+
+.mirror-hall .hud .frame::before {
+  top: -1px;
+  left: -1px;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.mirror-hall .hud .frame::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: 0;
+  border-top: 0;
+}
+
+.mirror-hall .hud .mast {
+  position: absolute;
+  top: clamp(30px, 6.6vh, 66px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92%;
+  text-align: center;
+}
+
+.mirror-hall .hud .mast .kicker {
+  font-size: clamp(8.5px, 0.95vw, 10px);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: rgba(180, 206, 244, 0.55);
+  margin-bottom: 15px;
+}
+
+.mirror-hall .hud .mast .kicker b {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.mirror-hall .hud .mast h2 {
+  margin: 0;
+  font-weight: 300;
+  font-size: clamp(30px, 5.6vw, 66px);
+  line-height: 1;
+  letter-spacing: 0.015em;
+  color: #f2f7ff;
+  text-shadow:
+    0 2px 44px rgba(70, 140, 220, 0.4),
+    0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+.mirror-hall .hud .mast .sub {
+  margin-top: 16px;
+  font-size: clamp(10.5px, 1.25vw, 13px);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: rgba(206, 222, 246, 0.6);
+}
+
+.mirror-hall .hud .focus {
+  position: absolute;
+  bottom: clamp(34px, 7vh, 74px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+}
+
+.mirror-hall .hud .focus .counter {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  font: 500 12px/1 ui-monospace, "SF Mono", Menlo, monospace;
+  letter-spacing: 0.16em;
+}
+
+.mirror-hall .hud .focus .counter .num {
+  color: var(--accent);
+  font-size: 14px;
+  text-shadow: 0 0 16px rgba(127, 216, 255, 0.5);
+}
+
+.mirror-hall .hud .focus .counter i {
+  color: rgba(190, 214, 246, 0.34);
+  font-style: normal;
+}
+
+.mirror-hall .hud .focus .counter .total {
+  color: rgba(190, 214, 246, 0.5);
+}
+
+.mirror-hall .hud .focus .name {
+  font-weight: 300;
+  font-size: clamp(20px, 3.4vw, 34px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #eef4ff;
+  text-shadow:
+    0 2px 30px rgba(50, 120, 200, 0.4),
+    0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes mirror-hall-focus-swap {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+.mirror-hall .hud .focus .name.-swap {
+  animation: mirror-hall-focus-swap 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.mirror-hall .hud .focus .dots {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 2px;
+}
+
+.mirror-hall .hud .focus .dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 4px;
+  background: rgba(176, 204, 244, 0.26);
+  transition:
+    width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+    background 0.5s ease,
+    box-shadow 0.5s ease;
+}
+
+.mirror-hall .hud .focus .dots i.-on {
+  width: 22px;
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(127, 216, 255, 0.65);
+}
+
+.mirror-hall .hud .hint {
+  position: absolute;
+  bottom: clamp(34px, 7vh, 74px);
+  right: clamp(26px, 4vw, 58px);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(196, 218, 248, 0.5);
+  transition: opacity 0.8s ease;
+}
+
+.mirror-hall .hud .hint::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: rgba(196, 218, 248, 0.4);
+  animation: mirror-hall-hint-slide 2.4s ease-in-out infinite;
+}
+
+@keyframes mirror-hall-hint-slide {
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateX(6px);
+    opacity: 0.9;
+  }
+}
+
+.mirror-hall .hud .mast,
+.mirror-hall .hud .focus,
+.mirror-hall .hud .hint {
+  opacity: 0;
+}
+
+.mirror-hall.-ready .hud .mast,
+.mirror-hall.-ready .hud .focus,
+.mirror-hall.-ready .hud .hint {
+  opacity: 1;
+}
+
+.mirror-hall.-nudged .hud .hint {
+  opacity: 0 !important;
+}
+
+.mirror-hall.-ready .hud .frame {
+  opacity: 1;
+}
+
+.mirror-hall__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 620px) {
+  .mirror-hall .hud .hint {
+    display: none;
+  }
+  .mirror-hall .hud .focus {
+    bottom: clamp(26px, 5vh, 40px);
+  }
+}

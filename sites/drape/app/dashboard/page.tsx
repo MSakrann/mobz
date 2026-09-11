@@ -1,0 +1,158 @@
+import Image from "next/image";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
+import { CreditsChip } from "@drape/components/credits-chip";
+import { EmptyState } from "@drape/components/empty-state";
+import { SiteFooter } from "@drape/components/site-footer";
+import { SiteHeader } from "@drape/components/site-header";
+import { Button } from "@drape/components/ui/button";
+import { Card } from "@drape/components/ui/card";
+import { loadOrCreateProfile } from "@drape/lib/profile";
+import { getUserId } from "@drape/lib/supabase/adapter";
+import { createServerClient } from "@drape/lib/supabase/server";
+import type { GenerationStatus, Workflow } from "@drape/lib/types";
+
+type Generation = {
+  id: string;
+  workflow: Workflow;
+  status: GenerationStatus;
+  output_paths: string[];
+  created_at: string;
+};
+
+const WORKFLOW_LABELS: Record<Workflow, string> = {
+  studio: "Catalog pack",
+  tryon: "Try-on",
+  lifestyle: "Lifestyle",
+  video: "Video",
+  variants: "Variants",
+};
+
+export default async function DashboardPage() {
+  const supabase = await createServerClient();
+  const userId = await getUserId(supabase);
+
+  if (!userId) {
+    redirect("/drape/sign-in");
+  }
+
+  const [profileResult, generationsResult] = await Promise.all([
+    loadOrCreateProfile(supabase, userId),
+    supabase
+      .from("generations")
+      .select("id, workflow, status, output_paths, created_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(12),
+  ]);
+
+  if (!profileResult.ok) {
+    return (
+      <>
+        <SiteHeader signedIn />
+        <main className="px-6 py-16">
+          <p role="alert" className="mx-auto max-w-xl text-[var(--drape-muted)]">
+            Could not load your account. Run the Supabase SQL migrations from
+            the README, then sign in again.
+          </p>
+        </main>
+        <SiteFooter />
+      </>
+    );
+  }
+
+  const profile = profileResult.profile;
+  const generations = (generationsResult.error
+    ? []
+    : (generationsResult.data ?? [])) as Generation[];
+
+  return (
+    <>
+      <SiteHeader signedIn credits={profile.credits} />
+      <main className="px-6 py-12 lg:px-10 lg:py-16">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-sm font-medium text-[var(--drape-accent)]">
+                Dashboard
+              </p>
+              <h1 className="mt-3 text-4xl font-semibold tracking-tight md:text-6xl">
+                Recent generations
+              </h1>
+              <div className="mt-5">
+                <CreditsChip credits={profile.credits} plan={profile.plan} />
+              </div>
+            </div>
+            <Button href="/drape/generate">New generation</Button>
+          </div>
+
+          <section aria-label="Recent generations" className="mt-10">
+            {generations.length === 0 ? (
+              <EmptyState />
+            ) : (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {generations.map((generation) => (
+                  <Link
+                    key={generation.id}
+                    href={`/drape/results/${generation.id}`}
+                    aria-label={`View ${WORKFLOW_LABELS[generation.workflow]} generation`}
+                    className="group rounded-[1.25em]"
+                  >
+                    <GenerationCard generation={generation} />
+                  </Link>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
+
+function GenerationCard({ generation }: { generation: Generation }) {
+  const outputPath = generation.output_paths[0];
+
+  return (
+    <Card className="h-full overflow-hidden p-2 transition-transform group-hover:-translate-y-1">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[var(--drape-bg)]">
+        {outputPath ? (
+          <Image
+            src={outputPath}
+            alt={`${WORKFLOW_LABELS[generation.workflow]} generation output`}
+            fill
+            sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover"
+          />
+        ) : (
+          <div
+            className={`flex h-full items-center justify-center bg-white/5 ${
+              generation.status === "running" ? "animate-pulse" : ""
+            }`}
+          >
+            <span className="text-sm font-medium text-[var(--drape-dim)]">
+              {generation.status === "running" ? "Generating…" : "No output"}
+            </span>
+          </div>
+        )}
+      </div>
+      <div className="flex items-center justify-between gap-4 px-3 py-4">
+        <div>
+          <h2 className="text-lg font-semibold">
+            {WORKFLOW_LABELS[generation.workflow]}
+          </h2>
+          <p className="mt-1 text-sm text-[var(--drape-muted)]">
+            {new Intl.DateTimeFormat("en", {
+              dateStyle: "medium",
+            }).format(new Date(generation.created_at))}
+          </p>
+        </div>
+        <span className="text-xs font-medium uppercase tracking-wide text-[var(--drape-accent)]">
+          {generation.status}
+        </span>
+      </div>
+    </Card>
+  );
+}

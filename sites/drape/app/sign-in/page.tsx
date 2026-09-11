@@ -1,0 +1,107 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
+
+import { SiteFooter } from "@drape/components/site-footer";
+import { SiteHeader } from "@drape/components/site-header";
+import { Button } from "@drape/components/ui/button";
+import { Card } from "@drape/components/ui/card";
+import { createBrowserClient } from "@drape/lib/supabase/client";
+
+const inputClass = "drape-input";
+
+export default function SignInPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setErrorMessage("");
+    setSubmitting(true);
+
+    try {
+      const supabase = createBrowserClient();
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setErrorMessage("Email or password is incorrect.");
+        return;
+      }
+
+      router.push("/drape/dashboard");
+    } catch {
+      setErrorMessage("Email or password is incorrect.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <>
+      <SiteHeader signedIn={false} />
+      <main className="px-6 py-16">
+        <Card className="mx-auto max-w-lg p-7 sm:p-10">
+          <p className="text-sm font-medium text-[var(--drape-accent)]">
+            Welcome back
+          </p>
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight">
+            Sign in
+          </h1>
+
+          <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+            <label className="block text-xs font-medium uppercase tracking-wide text-[var(--drape-dim)]">
+              Email
+              <input
+                className={inputClass}
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </label>
+
+            <label className="block text-xs font-medium uppercase tracking-wide text-[var(--drape-dim)]">
+              Password
+              <input
+                className={inputClass}
+                type="password"
+                autoComplete="current-password"
+                minLength={8}
+                required
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </label>
+
+            {errorMessage ? (
+              <p role="alert" className="text-sm text-[var(--drape-destructive)]">
+                {errorMessage}
+              </p>
+            ) : null}
+
+            <Button className="w-full" type="submit" disabled={submitting}>
+              {submitting ? "Signing in…" : "Sign in"}
+            </Button>
+          </form>
+
+          <p className="mt-6 text-center text-[var(--drape-muted)]">
+            New to Drape?{" "}
+            <Link className="font-medium text-[var(--drape-accent)]" href="/drape/sign-up">
+              Create an account
+            </Link>
+          </p>
+        </Card>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
