@@ -10,7 +10,7 @@ export const WORK_CARDS: WorkCard[] = [
   {
     id: "egypt",
     title: "Egypt",
-    img: "/assets/work/egypt.png",
+    img: "/assets/work/egypt.jpg",
     href: "/egypt",
   },
   {
