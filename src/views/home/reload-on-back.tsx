@@ -1,10 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-
 const SKIP_PRELOADER = "mobz-skip-preloader";
 const PRELOADER_DONE = "mobz-preloader-done";
-export const RESTORE_HALL_EVENT = "mobz-restore-hall";
 
 let returnedThisLoad = false;
 
@@ -29,23 +26,3 @@ export function shouldSkipPreloader() {
   if (typeof window === "undefined") return false;
   return consumeLandingReturn() || sessionStorage.getItem(PRELOADER_DONE) === "1";
 }
-
-/**
- * Back-forward cache can restore a dead WebGL context. Remount the hall in
- * place — never navigate or reload, or the preloader will play again.
- */
-export const ReloadOnBack = () => {
-  useEffect(() => {
-    const restoreHall = () => {
-      window.dispatchEvent(new Event(RESTORE_HALL_EVENT));
-    };
-    const onPageShow = (event: PageTransitionEvent) => {
-      if (!event.persisted) return;
-      restoreHall();
-    };
-    window.addEventListener("pageshow", onPageShow);
-    return () => window.removeEventListener("pageshow", onPageShow);
-  }, []);
-
-  return null;
-};

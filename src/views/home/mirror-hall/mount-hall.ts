@@ -653,29 +653,23 @@ export function mountMirrorHall(
   let visible = true;
   const io = new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting;
+    if (visible && !disposed && running && raf === 0) frame();
   });
   io.observe(section);
 
   requestAnimationFrame(() => section.classList.add("-ready"));
 
-  canvas.addEventListener(
-    "webglcontextlost",
-    (event) => {
-      event.preventDefault();
-      window.dispatchEvent(new Event("mobz-restore-hall"));
-    },
-    { once: true },
-  );
-
   let prevT = performance.now();
   let raf = 0;
   function frame() {
+    if (disposed || !running || !visible) {
+      raf = 0;
+      return;
+    }
     raf = requestAnimationFrame(frame);
-    if (disposed || !running) return;
     const now = performance.now();
     const dt = Math.min((now - prevT) / 1000, 0.05);
     prevT = now;
-    if (!visible) return;
     const t = now / 1000;
     if (!dragging && !flying) {
       carousel.rotation.y += spinVel + P.autoSpin * dt;

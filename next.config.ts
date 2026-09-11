@@ -51,15 +51,6 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [{ source: "/drape", destination: "/lumora.html" }];
   },
-
-  async headers() {
-    return [
-      {
-        source: "/",
-        headers: [{ key: "Cache-Control", value: "no-store, must-revalidate" }],
-      },
-    ];
-  },
 };
 
 export default nextConfig;

@@ -11,7 +11,6 @@ import { LazyCookie } from "@/components/common/Cookie";
 import { AdaptiveGrid } from "@/components/common/grid";
 import { ReducedMotion } from "@/components/common/reduced-motion";
 import { ScrollLayout } from "@/layouts/scroll-layout";
-import { ReloadOnBack } from "@/views/home/reload-on-back";
 
 import "@/app/globals.css";
 
@@ -44,7 +43,6 @@ export default function StudioLayout({
         }}
       />
       <ScrollLayout>
-        <ReloadOnBack />
         <AdaptiveGrid />
         <ReducedMotion />
         <LazyCookie />

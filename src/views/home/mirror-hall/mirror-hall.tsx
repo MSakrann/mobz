@@ -1,10 +1,10 @@
 "use client";
 
 import { Open_Sans } from "next/font/google";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import { LIVE_WORK_CARDS, WORK_CARDS } from "@/data/work-projects";
-import { consumeLandingReturn, markLandingReturn, RESTORE_HALL_EVENT } from "../reload-on-back";
+import { consumeLandingReturn, markLandingReturn } from "../reload-on-back";
 
 import "./mirror-hall.css";
 
@@ -21,7 +21,6 @@ export const MirrorHall = () => {
   const numRef = useRef<HTMLSpanElement>(null);
   const totalRef = useRef<HTMLSpanElement>(null);
   const dotsRef = useRef<HTMLDivElement>(null);
-  const [hallGen, setHallGen] = useState(0);
 
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
@@ -74,12 +73,6 @@ export const MirrorHall = () => {
       unmount();
       dotsWrap.replaceChildren();
     };
-  }, [hallGen]);
-
-  useEffect(() => {
-    const restore = () => setHallGen((n) => n + 1);
-    window.addEventListener(RESTORE_HALL_EVENT, restore);
-    return () => window.removeEventListener(RESTORE_HALL_EVENT, restore);
   }, []);
 
   return (
