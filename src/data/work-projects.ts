@@ -16,13 +16,13 @@ export const WORK_CARDS: WorkCard[] = [
   {
     id: "sodic",
     title: "Sodic",
-    img: "/assets/work/sodic.png",
+    img: "/assets/work/sodic.jpg",
     href: "/sodic",
   },
   {
     id: "clothing",
     title: "Clothing",
-    img: "/assets/work/clothing.png",
+    img: "/assets/work/clothing.jpg",
     href: "/clothing",
   },
   {
