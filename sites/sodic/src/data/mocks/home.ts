@@ -58,11 +58,11 @@ export const homeContent = {
     subtitle:
       "A 240 m² house on a south-facing slope, 40 minutes from the city. One owner, one view, no neighbours in sight.",
     cta: { label: "Book a viewing", href: "#contact" },
-    wordmark: "aerra",
+    wordmark: "sodic",
     caption: ["Finished and ready to live in —", "heat, light and everything in between"],
     image: {
       src: "/assets/Hero/hero.png",
-      alt: "The AERRA house lit from within at dusk, standing alone on a rocky mountain slope.",
+      alt: "The house lit from within at dusk, standing alone on a rocky mountain slope.",
       width: 2160,
       height: 2271,
     },
@@ -87,10 +87,10 @@ export const homeContent = {
       },
     ] satisfies HighlightItem[],
     image: {
-      src: "/assets/About/about.png",
-      alt: "The house seen from the valley floor, its windows glowing against the dark treeline.",
-      width: 842,
-      height: 1025,
+      src: "/assets/sodic/ceo.jpg",
+      alt: "Sodic CEO",
+      width: 659,
+      height: 844,
     },
     video: {
       src: "/assets/About/about-video.mp4",
@@ -102,10 +102,8 @@ export const homeContent = {
      * stand-in written to the right length — replace with the real quote.
      */
     quote: {
-      // Figma's box allows one 20 px line plus a short attribution — keep the
-      // quote to roughly this length or the card overflows.
-      text: "We stayed until it got dark.",
-      attribution: "The first family to view it, spring 2026",
+      text: "My one hour of me time is absolutely essential. I might skip exercise, but never the one hour of winding down before I go to bed",
+      attribution: "",
     },
   },
 
@@ -123,7 +121,7 @@ export const homeContent = {
 
   location: {
     eyebrow: "Location",
-    body: "The house sits last in the line — beyond it, only forest and ridge. Mains water and power, fibre broadband, and a road that gets cleared all winter. Isolation without the trade-offs: schools, shops and the motorway are fifteen minutes out.",
+    body: "The house sits last in the heart of New Zayed. Isolation without the trade-offs: schools, shops and the motorway are fifteen minutes out.",
     cta: { label: "See it on the map", href: "#contact" },
     image: {
       src: "/assets/Location/location.png",

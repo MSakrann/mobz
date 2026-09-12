@@ -7,7 +7,7 @@
 import { publicEnv } from "@sodic/env";
 
 export const siteConfig = {
-  name: "AERRA",
+  name: "Sodic",
   description:
     "A 240 m² house on a south-facing slope, 40 minutes from the city. One owner, one view, no neighbours in sight.",
   /**
@@ -24,8 +24,8 @@ export const siteConfig = {
    * path is kept here because the metadata generator takes it as a parameter.
    */
   ogImage: "/opengraph-image",
-  twitterHandle: "@aerra",
-  author: "AERRA",
+  twitterHandle: "@sodic",
+  author: "Sodic",
   /** Browser theme-color (address bar / PWA) — the hero sky, not black. */
   themeColor: "#1a506d",
 } as const;

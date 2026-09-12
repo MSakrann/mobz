@@ -22,6 +22,15 @@ export interface ParallaxMediaProps {
   priority?: boolean;
   /** Extra classes for the clip box; it already fills its parent. */
   className?: string;
+  /**
+   * How the file sits in the clip box. Cover is the default (photographs that
+   * were drawn to the frame). Contain is for files whose aspect does not match
+   * the layout — a 2:1 banner in the tall hero, a 9:16 portrait in the about
+   * tile — so they are not cropped into a sliver or stretched.
+   */
+  fit?: "cover" | "contain";
+  /** Extra classes on the `next/image` element, e.g. `object-bottom`. */
+  imageClassName?: string;
   /** Defaults suit a section scrolled through from below. */
   start?: TriggerPos;
   end?: TriggerPos;
@@ -125,11 +134,20 @@ export const ParallaxMedia = ({
   sizes,
   priority,
   className,
+  imageClassName,
+  fit = "cover",
   start,
   end,
   anchor,
 }: ParallaxMediaProps) => (
   <ParallaxLayer className={className} start={start} end={end} anchor={anchor}>
-    <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" />
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      sizes={sizes}
+      priority={priority}
+      className={`${fit === "contain" ? "object-contain" : "object-cover"} ${imageClassName ?? ""}`.trim()}
+    />
   </ParallaxLayer>
 );

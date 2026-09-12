@@ -118,26 +118,25 @@ export const AboutSection = ({ content }: AboutSectionProps) => (
       from={fade.from}
       to={fade.to}
       config={revealConfig}
-      className="relative mt-10 aspect-[561/683] w-full lg:absolute lg:left-10 lg:top-163 lg:mt-0 lg:aspect-auto lg:h-170.75 lg:w-140.25"
+      className="relative mt-10 aspect-[561/683] w-full overflow-hidden rounded-card bg-surface-muted lg:absolute lg:left-10 lg:top-163 lg:mt-0 lg:aspect-auto lg:h-170.75 lg:w-140.25"
     >
       <ParallaxMedia
         src={content.image.src}
         alt={content.image.alt}
         sizes="39vw"
+        fit="cover"
+        anchor="start"
         className="rounded-card"
       />
 
-      {/* Figma "Rectangle 1991424012" (1505:1816) — inset 30 px from the
-          photograph's left and bottom edges. */}
-      <figcaption className="absolute inset-x-4 bottom-4 rounded-button bg-action-secondary p-5 lg:inset-x-auto lg:bottom-7.5 lg:left-7.5 lg:h-32.5 lg:w-125.5 lg:p-7.5">
-        {/* Figma draws this block at 282 px, which only fits its old two-word
-            placeholder. Widened to clear the glyph instead, so a real sentence
-            still sits on one line. */}
-        <blockquote className="w-full lg:w-90">
+      <figcaption className="absolute inset-x-4 bottom-4 rounded-button bg-action-secondary p-5 lg:inset-x-auto lg:bottom-7.5 lg:left-7.5 lg:right-7.5 lg:h-auto lg:w-auto lg:p-7.5">
+        <blockquote className="w-full pr-8">
           <p className="text-lead leading-body text-foreground">{content.quote.text}</p>
-          <p className="text-trim-body mt-4 text-body font-light leading-body text-foreground">
-            {content.quote.attribution}
-          </p>
+          {content.quote.attribution ? (
+            <p className="text-trim-body mt-4 text-body font-light leading-body text-foreground">
+              {content.quote.attribution}
+            </p>
+          ) : null}
         </blockquote>
         {/* 18.656 × 14.272 px in Figma, rounded to whole pixels (19 × 14):
             the spacing scale only emits multiples of 0.25, and anything else

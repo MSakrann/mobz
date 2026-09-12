@@ -1,10 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Spring } from "@sodic/components/animation/springs/spring";
-import { BrandMark } from "@sodic/components/ui/icons/brand-mark";
 import { revealConfig, revealConfigSnappy } from "@sodic/lib/springs/reveal";
 import type { NavLink } from "@sodic/data/mocks/home";
 
@@ -51,10 +51,16 @@ export const SiteNav = ({ links, cta }: SiteNavProps) => {
       >
         <Link
           href="/"
-          aria-label="AERRA — home"
-          className="flex size-11 shrink-0 items-center justify-center rounded-control bg-action-secondary transition-transform duration-[var(--duration-fast)] ease-entrance hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+          aria-label="Sodic — home"
+          className="relative flex h-11 w-16 shrink-0 items-center justify-center overflow-hidden rounded-control bg-action-secondary transition-transform duration-[var(--duration-fast)] ease-entrance hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
         >
-          <BrandMark className="w-5 text-foreground" />
+          <Image
+            src="/assets/sodic/logo.jpg"
+            alt="Sodic"
+            fill
+            sizes="64px"
+            className="object-contain p-1"
+          />
         </Link>
 
         <ul className="hidden items-center gap-8 lg:flex">
