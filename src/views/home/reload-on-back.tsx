@@ -7,10 +7,12 @@ let returnedThisLoad = false;
 
 export function markLandingReturn() {
   sessionStorage.setItem(SKIP_PRELOADER, "1");
+  localStorage.setItem(PRELOADER_DONE, "1");
 }
 
 export function markPreloaderDone() {
   sessionStorage.setItem(PRELOADER_DONE, "1");
+  localStorage.setItem(PRELOADER_DONE, "1");
 }
 
 export function consumeLandingReturn() {
@@ -24,5 +26,9 @@ export function consumeLandingReturn() {
 
 export function shouldSkipPreloader() {
   if (typeof window === "undefined") return false;
-  return consumeLandingReturn() || sessionStorage.getItem(PRELOADER_DONE) === "1";
+  return (
+    consumeLandingReturn() ||
+    sessionStorage.getItem(PRELOADER_DONE) === "1" ||
+    localStorage.getItem(PRELOADER_DONE) === "1"
+  );
 }

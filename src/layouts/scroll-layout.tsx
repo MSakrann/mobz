@@ -34,9 +34,14 @@ function ScrollController() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     window.scrollTo(0, 0);
+
+    // iOS (including Firefox) pull-to-refresh + Lenis fighting native scroll
+    // reloads the document. Use native scrolling on touch devices.
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    if (coarse) return;
+
     const lenis = new Lenis({
       smoothWheel: true,
-      // syncTouch: true,
     });
     (window as typeof window & { lenis: Lenis }).lenis = lenis;
     setLenis(lenis);

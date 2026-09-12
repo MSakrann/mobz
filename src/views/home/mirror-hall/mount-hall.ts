@@ -121,11 +121,18 @@ export function mountMirrorHall(
   opts: MountHallOptions,
 ): () => void {
   const { cards, onNavigate, reducedMotion, section } = opts;
+  const mobile = window.matchMedia("(pointer: coarse)").matches;
   const canvas = document.createElement("canvas");
   host.appendChild(canvas);
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: !mobile,
+    alpha: false,
+    powerPreference: mobile ? "low-power" : "high-performance",
+    failIfMajorPerformanceCaveat: false,
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const DPR = renderer.getPixelRatio();
 
@@ -166,7 +173,7 @@ export function mountMirrorHall(
   camera.lookAt(lookTarget);
 
   {
-    const N = 700;
+    const N = mobile ? 180 : 700;
     const pos = new Float32Array(N * 3);
     let seed = 1234.5;
     const rnd = () => {
@@ -690,7 +697,7 @@ export function mountMirrorHall(
     }
     wu.uTime.value = t;
     wu.uCamPos.value.copy(camera.position);
-    updateReflection();
+    if (!mobile) updateReflection();
     renderer.render(scene, camera);
     syncLabels();
     css3d.render(scene, camera);

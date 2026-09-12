@@ -127,6 +127,7 @@ export const HeroSection = ({ content }: HeroSectionProps) => {
         loop
         muted
         playsInline
+        preload="metadata"
         aria-hidden
       />
 

@@ -207,7 +207,9 @@ export const LavaBackground = ({ config }: LavaBackgroundProps) => {
       antialias: false,
       depth: false,
       stencil: false,
-      powerPreference: "high-performance",
+      powerPreference: window.matchMedia("(pointer: coarse)").matches
+        ? "low-power"
+        : "high-performance",
     });
     if (!gl) return;
 
