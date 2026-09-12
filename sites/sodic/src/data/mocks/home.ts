@@ -61,7 +61,7 @@ export const homeContent = {
     wordmark: "sodic",
     caption: ["Finished and ready to live in —", "heat, light and everything in between"],
     image: {
-      src: "/assets/Hero/hero.png",
+      src: "/assets/hero/hero.png",
       alt: "The house lit from within at dusk, standing alone on a rocky mountain slope.",
       width: 2160,
       height: 2271,
