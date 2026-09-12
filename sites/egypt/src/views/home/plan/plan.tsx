@@ -19,7 +19,6 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 import Image from "next/image";
 import {
   animated,
-  easings,
   SpringValue,
   to,
   useInView,
@@ -42,17 +41,7 @@ import {
   HOVER_QUERY,
   NOTE_SIZES,
   NOTE_TILT,
-  PARALLAX,
-  PARALLAX_CONFIG,
   SCENE_SIZES,
-  STEAM_DRIFT,
-  STEAM_DRIFT_MS,
-  STEAM_OPACITY,
-  STEAM_PULSE_MS,
-  STEAM_ALPHA_GAMMA,
-  STEAM_FILTER_ID,
-  STEAM_SCALE,
-  STEAM_STRENGTH,
   WRITE,
   WRITE_EPSILON,
   WRITE_LERP,
@@ -79,63 +68,6 @@ const useMediaQuery = (query: string): boolean =>
     () => false,
   );
 
-/**
- * The cursor's offset from the centre of the **screen**, each axis on −1…1,
- * carried by one spring so the layers arrive with weight rather than snapping.
- *
- * One spring for three layers, not three: they share a pointer, so they should
- * share the value and differ only in how far they take it. That also means the
- * amplitudes stay readable as the depth order they are.
- *
- * The listener is only attached where a pointer actually exists — a coarse
- * pointer has no hover to give and would leave the layers wherever the last tap
- * happened to land.
- */
-const usePointerLean = (active: boolean) => {
-  const [{ x, y }, api] = useSpring(
-    () => ({ x: 0, y: 0, config: PARALLAX_CONFIG }),
-    [],
-  );
-
-  useEffect(() => {
-    if (!active) {
-      api.start({ x: 0, y: 0 });
-      return;
-    }
-
-    const onMove = (event: PointerEvent) => {
-      api.start({
-        x: (event.clientX / window.innerWidth) * 2 - 1,
-        y: (event.clientY / window.innerHeight) * 2 - 1,
-      });
-    };
-
-    window.addEventListener("pointermove", onMove, { passive: true });
-    return () => window.removeEventListener("pointermove", onMove);
-  }, [active, api]);
-
-  return { x, y };
-};
-
-/**
- * A layer's own transform: the shared lean, scaled to its own depth.
- *
- * `to([x, y], …)` rather than `x.to(…)` reading `y.get()` — an interpolation
- * only recomputes when something it is *attached* to changes, so the one-sided
- * form would leave the layer frozen on a purely vertical move.
- */
-const lean = (
-  x: SpringValue<number>,
-  y: SpringValue<number>,
-  depth: { x: number; y: number },
-) =>
-  // Against the cursor, hence the minus — see PARALLAX.
-  to(
-    [x, y],
-    (px, py) =>
-      `translate3d(${(-px * depth.x).toFixed(2)}px, ${(-py * depth.y).toFixed(2)}px, 0px)`,
-  );
-
 export interface PlanProps {
   content: PlanContent;
 }
@@ -146,59 +78,6 @@ export const Plan = ({ content }: PlanProps) => {
   const prefersReducedMotion = useMediaQuery(REDUCED_MOTION_QUERY);
   const hasPointer = useMediaQuery(HOVER_QUERY);
   const animate = !prefersReducedMotion;
-
-  const { x, y } = usePointerLean(animate && hasPointer);
-
-  /**
-   * The two steam loops. `loop: { reverse: true }` turns at each end instead of
-   * jumping back to the start, and `easeInOutSine` makes the turn itself the
-   * slow part — which is what a body of vapour does.
-   */
-  const [drift] = useSpring(
-    () => ({
-      from: { t: 0 },
-      to: { t: 1 },
-      loop: { reverse: true },
-      config: { duration: STEAM_DRIFT_MS, easing: easings.easeInOutSine },
-      pause: !animate,
-    }),
-    [animate],
-  );
-  const [pulse] = useSpring(
-    () => ({
-      from: { t: 0 },
-      to: { t: 1 },
-      loop: { reverse: true },
-      config: { duration: STEAM_PULSE_MS, easing: easings.easeInOutSine },
-      pause: !animate,
-    }),
-    [animate],
-  );
-
-  /**
-   * Drift and scale ride the same value, and the scale peaks where the drift
-   * does — see STEAM_SCALE for why that is a requirement and not a flourish.
-   */
-  const steamMotion = animate
-    ? drift.t.to(
-        (t) =>
-          `translateX(${((t - 0.5) * 2 * STEAM_DRIFT).toFixed(3)}%) scale(${(
-            1 +
-            STEAM_SCALE * Math.abs(2 * t - 1)
-          ).toFixed(4)})`,
-      )
-    : "translateX(0%) scale(1)";
-  /**
-   * The pulse keeps its shape — 0.85 → 1 of the layer's own weight — and
-   * `STEAM_STRENGTH` sets what that weight is. Splitting the two means the
-   * breath can be retimed without touching how thick the fog reads, and the
-   * other way round.
-   */
-  const steamOpacity = animate
-    ? pulse.t.to(
-        (t) => STEAM_STRENGTH * (STEAM_OPACITY + (1 - STEAM_OPACITY) * t),
-      )
-    : STEAM_STRENGTH;
 
   /**
    * The writing, as a **function of where the section is** — not of a clock.
@@ -339,48 +218,12 @@ export const Plan = ({ content }: PlanProps) => {
     />
   );
 
-  const parallax = useMemo(
-    () => ({
-      far: lean(x, y, PARALLAX.far),
-      steam: lean(x, y, PARALLAX.steam),
-      foreground: lean(x, y, PARALLAX.foreground),
-    }),
-    [x, y],
-  );
-
   return (
     <section
       aria-label="Plan a Journey"
       className={CLASS.section}
       ref={sectionRef}
     >
-      {/*
-        The steam's alpha curve. It has to be an SVG filter because it is the
-        *alpha* that needs reshaping and the CSS shorthands only reach colour —
-        see STEAM_ALPHA_GAMMA. `sRGB` because the default is linear, and there
-        is no reason to drag the colours through a conversion to touch alpha.
-      */}
-      <svg className="absolute size-0" aria-hidden focusable="false">
-        <defs>
-          <filter
-            id={STEAM_FILTER_ID}
-            colorInterpolationFilters="sRGB"
-            x="0"
-            y="0"
-            width="100%"
-            height="100%"
-          >
-            <feComponentTransfer>
-              <feFuncA
-                type="gamma"
-                exponent={STEAM_ALPHA_GAMMA.exponent}
-                amplitude={STEAM_ALPHA_GAMMA.amplitude}
-              />
-            </feComponentTransfer>
-          </filter>
-        </defs>
-      </svg>
-
       {/*
         The photograph, on a layer of its own that **covers** the screen while
         the composition below **fits inside** it. A fixed-ratio picture cannot do
@@ -389,50 +232,23 @@ export const Plan = ({ content }: PlanProps) => {
         composition is not. See `CLASS.picture` / `CLASS.scene`.
       */}
       <div className={CLASS.picture} aria-hidden>
-        {/* The base plate. Not `animated` and not leaning — see CLASS.backdrop. */}
         <div className={CLASS.backdrop}>
           {layer(content.media.backdrop, "object-cover")}
         </div>
-
-        <animated.div
-          className={CLASS.far}
-          style={{ transform: parallax.far }}
-          aria-hidden
-        >
-          {layer(content.media.far, "object-cover")}
-        </animated.div>
-
-        {/*
-          Two nested elements because two transforms have to live on this layer
-          and one property cannot hold both: the outer one is the pointer lean,
-          the inner one the steam's own drift and breath.
-        */}
-        <animated.div
-          className={CLASS.steam}
-          style={{ transform: parallax.steam }}
-          aria-hidden
-        >
-          <animated.div
-            className="relative h-full w-full will-change-transform"
-            style={{ transform: steamMotion, opacity: steamOpacity }}
-          >
-            {layer(content.media.steam, `object-cover ${CLASS.steamWisps}`)}
-          </animated.div>
-        </animated.div>
-
-        <animated.div
-          className={CLASS.foreground}
-          style={{ transform: parallax.foreground }}
-        >
-          {layer(content.media.foreground, "object-cover")}
-        </animated.div>
 
         <div className={CLASS.wash} />
       </div>
 
       <div className={CLASS.scene}>
         <h2 className={CLASS.title}>
-          <RevealTitle segments={content.title} animate={animate} />
+          {content.title.map((line, index) => (
+            <span
+              key={index}
+              className={`block ${index === 0 ? "text-white" : "text-foreground-ink"}`}
+            >
+              <RevealTitle segments={line} animate={animate} />
+            </span>
+          ))}
         </h2>
 
         {/*
@@ -513,12 +329,14 @@ export const Plan = ({ content }: PlanProps) => {
             />
           </animated.span>
 
-          <animated.p
-            className={CLASS.noteAside}
-            style={{ clipPath: pen(WRITE.aside) }}
-          >
-            {content.noteAside}
-          </animated.p>
+          {content.noteAside ? (
+            <animated.p
+              className={CLASS.noteAside}
+              style={{ clipPath: pen(WRITE.aside) }}
+            >
+              {content.noteAside}
+            </animated.p>
+          ) : null}
         </animated.div>
 
         {/*

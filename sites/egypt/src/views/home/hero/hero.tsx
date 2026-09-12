@@ -199,6 +199,7 @@ export const Hero = ({ content }: HeroProps) => {
    * > invisible in the first place.
    */
   const handedOver = useScroll((state) => state.isEnableScroll);
+  const isClip = /\.(mp4|webm|mov)$/i.test(content.media.video.src);
 
   useEffect(() => {
     if (prefersReducedMotion || !handedOver) return;
@@ -218,6 +219,19 @@ export const Hero = ({ content }: HeroProps) => {
     progress.set(0);
     veil.set(0);
     setClipEnded(false);
+
+    if (!isClip) {
+      setClipEnded(true);
+      veil.start({
+        to: 1,
+        config: { duration: VEIL_MS, easing: easings.easeOutCubic },
+      });
+      progress.start({
+        to: 1,
+        config: { duration: ASSEMBLY_MS, easing: easings.linear },
+      });
+      return;
+    }
     if (video) {
       video.playbackRate = VIDEO_RATE;
       video.currentTime = 0;
@@ -355,7 +369,7 @@ export const Hero = ({ content }: HeroProps) => {
       video?.pause();
       progress.stop();
     };
-  }, [handedOver, prefersReducedMotion, progress, veil]);
+  }, [handedOver, isClip, prefersReducedMotion, progress, veil]);
 
   const staticFrame = prefersReducedMotion;
 
@@ -486,6 +500,7 @@ export const Hero = ({ content }: HeroProps) => {
             src={content.media.still.src}
             alt=""
             fill
+            priority
             sizes="100vw"
             quality={STILL_QUALITY}
             className="object-cover"

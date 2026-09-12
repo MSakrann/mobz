@@ -417,7 +417,7 @@ export const CLASS = {
    * vertically — 180px at 1440×900 — which is the price of reaching the edges,
    * and it takes it off a photograph that is 5760 wide.
    */
-  backdrop: "absolute inset-x-0 top-0 h-[200%]",
+  backdrop: "absolute inset-0 bg-surface-gallery",
 
   /** rgba(0,0,0,0.4) over the photograph, under everything else. Present in
    *  both states — the file carries it at progress 0 too, so it never animates. */

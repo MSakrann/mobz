@@ -350,17 +350,21 @@ const Panel = ({
               already run on, so all three are one movement rather than a
               block of text sliding up with nothing happening inside it.
             */}
-            <p
-              className={CLASS.body}
-              style={
-                { "--b4-copy": `${panel.bodyWidth / 16}rem` } as CSSProperties
-              }
-            >
-              <SweepWords text={panel.body} progress={spring.open} />
-            </p>
-            <p className={CLASS.signOff}>
-              <SweepWords text={panel.signOff} progress={spring.open} />
-            </p>
+            {panel.body ? (
+              <p
+                className={CLASS.body}
+                style={
+                  { "--b4-copy": `${panel.bodyWidth / 16}rem` } as CSSProperties
+                }
+              >
+                <SweepWords text={panel.body} progress={spring.open} />
+              </p>
+            ) : null}
+            {panel.signOff ? (
+              <p className={CLASS.signOff}>
+                <SweepWords text={panel.signOff} progress={spring.open} />
+              </p>
+            ) : null}
           </div>
         </div>
       </animated.div>
@@ -430,8 +434,10 @@ const StackedCard = ({
         <h3 className={STACK.heading}>
           <SegmentedText segments={panel.title} />
         </h3>
-        <p className={CLASS.body}>{panel.body}</p>
-        <p className={CLASS.signOff}>{panel.signOff}</p>
+        {panel.body ? <p className={CLASS.body}>{panel.body}</p> : null}
+        {panel.signOff ? (
+          <p className={CLASS.signOff}>{panel.signOff}</p>
+        ) : null}
       </div>
     </div>
   );

@@ -422,7 +422,7 @@ export const CLASS = {
    * black column.
    */
   picture:
-    "bg-scrim-page absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[max(100%,calc(100dvh*1440/1077))] aspect-[1440/1077] [container-type:size] max-lg:inset-0 max-lg:left-0 max-lg:top-0 max-lg:h-full max-lg:w-full max-lg:translate-x-0 max-lg:translate-y-0 max-lg:aspect-auto max-lg:[container-type:normal]",
+    "bg-surface-gallery absolute inset-0 overflow-hidden",
 
   /**
    * The composition, and it **fits**.
@@ -534,7 +534,7 @@ export const CLASS = {
    * cream would disappear into it.
    */
   title:
-    "text-foreground-ink font-display text-trim absolute left-[38.9583cqw] top-[6.9444cqw] w-[22.0833cqw] text-center text-[4.4444cqw] leading-[3.5556cqw] max-lg:static max-lg:w-full max-lg:text-[48px] max-lg:leading-[38.4px] max-md:text-[36px] max-md:leading-[28.8px]",
+    "text-foreground-ink font-display text-trim absolute left-[34cqw] top-[6.9444cqw] w-[32cqw] text-center text-[4.4444cqw] leading-[3.5556cqw] max-lg:static max-lg:w-full max-lg:text-[48px] max-lg:leading-[38.4px] max-md:text-[36px] max-md:leading-[28.8px]",
 
   /**
    * The pinned note: 549 / 196, 342 × 367 — and **a container of its own**.
@@ -587,7 +587,7 @@ export const CLASS = {
    * clearance is the last air left over the note; anything further has to come
    * out of that.
    */
-  note: "absolute left-[38.125cqw] top-[13.6111cqw] h-[25.4861cqw] w-[23.75cqw] [container-type:size] max-lg:relative max-lg:left-auto max-lg:top-auto max-lg:h-auto max-lg:w-[min(342px,100%)] max-lg:aspect-[342/367] md:max-lg:w-auto md:max-lg:min-h-[240px] md:max-lg:max-h-[367px] md:max-lg:flex-1 md:max-lg:-translate-y-[40px] max-md:-mt-[24px]",
+  note: "absolute left-[38.125cqw] top-[calc(20.5cqw-35px)] h-[25.4861cqw] w-[23.75cqw] [container-type:size] max-lg:relative max-lg:left-auto max-lg:top-auto max-lg:h-auto max-lg:w-[min(342px,100%)] max-lg:aspect-[342/367] md:max-lg:w-auto md:max-lg:min-h-[240px] md:max-lg:max-h-[367px] md:max-lg:flex-1 md:max-lg:-translate-y-[40px] max-md:-mt-[24px]",
 
   /** The photograph of the note itself, filling its box. */
   notePaper: "absolute inset-0",
@@ -651,7 +651,7 @@ export const CLASS = {
    * first — was a gap wide enough to read as the block having ended.
    */
   action:
-    "absolute left-[44.1667cqw] top-[41.875cqw] block h-[2.6389cqw] w-[11.6667cqw] max-lg:relative max-lg:left-auto max-lg:top-auto max-lg:h-[38px] max-lg:w-[168px] md:max-lg:shrink-0 md:max-lg:-translate-y-[40px] max-md:mb-[46px]",
+    "absolute left-[44.1667cqw] top-[48.8cqw] block h-[2.6389cqw] w-[11.6667cqw] max-lg:relative max-lg:left-auto max-lg:top-auto max-lg:h-[38px] max-lg:w-[168px] md:max-lg:shrink-0 md:max-lg:-translate-y-[40px] max-md:mb-[46px]",
 
   /**
    * The pill itself, on the element the hover spring moves — the border has to

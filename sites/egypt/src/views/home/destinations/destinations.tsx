@@ -86,7 +86,7 @@ const useMedia = (query: string): boolean =>
   );
 
 /** The file splits the index in half: 01–08 on the left, 09–16 on the right. */
-const COLUMN_LENGTH = 8;
+const COLUMN_LENGTH = 5;
 
 export interface DestinationsProps {
   content: DestinationsContent;
@@ -280,6 +280,11 @@ export const Destinations = ({ content }: DestinationsProps) => {
           layer is simply the scene itself.
         */}
         <div className={CLASS.cards}>
+          <div
+            className={CLASS.focusVeil}
+            style={{ opacity: engaged ? 1 : 0 }}
+            aria-hidden
+          />
           {content.countries.map((country) => (
             <SceneCard
               key={country.id}

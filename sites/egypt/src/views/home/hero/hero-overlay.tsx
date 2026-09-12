@@ -530,35 +530,34 @@ export const HeroOverlay = ({
         </a>
       </Reveal>
 
-      <Reveal
-        progress={progress}
-        group="destinations"
-        interactive
-        className={`${CLASS.destinations} flex flex-col gap-sm`}
-      >
-        <p className={`${bodyClass} flex items-center gap-xs`}>
-          <DotIcon className="shrink-0" />
-          {content.destinationsLabel}
-        </p>
-        {/* The four names go below the desktop base: on a tablet the column ran
-            off the bottom edge, and on a phone the whole group is gone anyway.
-            The label stays and still links onward via EXPLORE DESTINATIONS. */}
-        <ul className="flex flex-col gap-sm max-lg:hidden">
-          {content.destinations.map((link) => (
-            <li
-              key={link.href}
-              className={`font-ui text-body leading-body text-foreground-accent-muted text-trim uppercase ${smallType}`}
-            >
-              <a
-                href={link.href}
-                className={`transition-colors ${hoverTiming} hover:text-foreground-accent focus-visible:text-foreground-accent ${focusRing}`}
+      {content.destinations.length > 0 ? (
+        <Reveal
+          progress={progress}
+          group="destinations"
+          interactive
+          className={`${CLASS.destinations} flex flex-col gap-sm`}
+        >
+          <p className={`${bodyClass} flex items-center gap-xs`}>
+            <DotIcon className="shrink-0" />
+            {content.destinationsLabel}
+          </p>
+          <ul className="flex flex-col gap-sm max-lg:hidden">
+            {content.destinations.map((link) => (
+              <li
+                key={link.href}
+                className={`font-ui text-body leading-body text-foreground-accent-muted text-trim uppercase ${smallType}`}
               >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </Reveal>
+                <a
+                  href={link.href}
+                  className={`transition-colors ${hoverTiming} hover:text-foreground-accent focus-visible:text-foreground-accent ${focusRing}`}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      ) : null}
 
       <Reveal
         progress={progress}

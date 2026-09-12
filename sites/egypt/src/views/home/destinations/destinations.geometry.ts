@@ -251,6 +251,16 @@ export const CARD_TILT = {
 } as const;
 
 /**
+ * Hover: the card slides to the scene centre and grows a little, instead of
+ * tilting in place. `from`/`to` share one transform template so the spring
+ * interpolates every number.
+ */
+export const CARD_FOCUS = {
+  scale: 1.14,
+  config: { tension: 170, friction: 24 },
+} as const;
+
+/**
  * What the other fifteen fall to while one is picked up.
  *
  * The block used to insist that **nothing** dims — every card at full strength
@@ -323,6 +333,17 @@ export const toCardTilt = (order: number): CardTilt => {
       `perspective(${CARD_TILT.perspective}px) ` +
       `translate3d(0cqw, ${round(-CARD_TILT.lift)}cqw, ${CARD_TILT.rise}px) ` +
       `rotateX(${rx}deg) rotateY(${ry}deg) rotate(${rz}deg) scale(${CARD_TILT.scale})`,
+  };
+};
+
+/** Offset from a card's rest centre to the scene's centre, in `cqw`. */
+export const toCardFocus = (asset: { cx: number; cy: number }): CardTilt => {
+  const dx = cqw(FRAME_WIDTH / 2 - asset.cx);
+  const dy = cqw(FRAME_HEIGHT / 2 - asset.cy);
+
+  return {
+    from: `translate3d(0cqw, 0cqw, 0px) scale(1)`,
+    to: `translate3d(${dx}cqw, ${dy}cqw, 0px) scale(${CARD_FOCUS.scale})`,
   };
 };
 
@@ -1011,6 +1032,9 @@ export const CLASS = {
    */
   cards: "absolute inset-0 max-lg:hidden",
 
+  focusVeil:
+    "pointer-events-none absolute inset-0 z-[20] bg-black/45 backdrop-blur-md transition-opacity duration-300 ease-entrance motion-reduce:transition-none",
+
   /*
    * The row under the heading. `contents` on the desktop base, where every
    * child is absolutely positioned against the scene itself.
@@ -1090,11 +1114,11 @@ export const CLASS = {
 
   /* left 24, top 317, 147 × 202. */
   listLeft:
-    "absolute left-[1.6667cqw] top-[22.0139cqw] w-[10.2083cqw] items-start max-lg:static max-lg:order-1 max-lg:w-auto max-lg:shrink-0",
+    "absolute left-[1.6667cqw] top-[22.0139cqw] z-[40] w-[10.2083cqw] items-start max-lg:static max-lg:z-auto max-lg:order-1 max-lg:w-auto max-lg:shrink-0",
 
   /* left 1269, top 317, 147 × 202, set to the right. */
   listRight:
-    "absolute left-[88.125cqw] top-[22.0139cqw] w-[10.2083cqw] items-end text-right max-lg:static max-lg:order-3 max-lg:w-auto max-lg:shrink-0",
+    "absolute left-[88.125cqw] top-[22.0139cqw] z-[40] w-[10.2083cqw] items-end text-right max-lg:static max-lg:z-auto max-lg:order-3 max-lg:w-auto max-lg:shrink-0",
 
   /*
    * Eight rows on a **27px pitch**, which is what the frame's 202px column comes

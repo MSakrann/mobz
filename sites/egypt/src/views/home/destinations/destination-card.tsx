@@ -19,7 +19,7 @@ import type { SpringValue } from "@react-spring/web";
 
 import {
   CARD_DIM,
-  CARD_TILT,
+  CARD_FOCUS,
   LOWERING_Z,
   RAISED_Z,
   STACK,
@@ -27,7 +27,7 @@ import {
   TOUCH_PRESS,
   TOUCH_TARGET,
   toCardDrift,
-  toCardTilt,
+  toCardFocus,
   toCardTransform,
   toEntranceOpacity,
   toEntrancePhase,
@@ -123,8 +123,8 @@ export const SceneCard = ({
   dimmed,
   lowering,
 }: SceneCardProps) => {
-  /* This card's own tilt, flight and drift — all derived, none stored. */
-  const tilt = useMemo(() => toCardTilt(asset.z), [asset.z]);
+  /* This card's own flight, drift and focus — all derived, none stored. */
+  const focus = useMemo(() => toCardFocus(asset), [asset]);
   const travel = useMemo(() => toEntranceTravel(asset), [asset]);
   const phase = useMemo(
     () => toEntrancePhase(asset.z - 1, count),
@@ -132,14 +132,9 @@ export const SceneCard = ({
   );
   const parallax = useMemo(() => toCardDrift(asset, count), [asset, count]);
 
-  /*
-   * The tilt. `RAISED_Z` is applied without a spring: paint order is not a
-   * thing you can be halfway through, and animating it would only decide the
-   * winner late. `LOWERING_Z` is what softens the swap instead.
-   */
   const spring = useSpring({
-    transform: raised ? tilt.to : tilt.from,
-    config: CARD_TILT.config,
+    transform: raised ? focus.to : focus.from,
+    config: CARD_FOCUS.config,
     immediate: !interactive,
   });
 
@@ -155,7 +150,7 @@ export const SceneCard = ({
 
   return (
     <animated.div
-      className={`group absolute -translate-x-1/2 -translate-y-1/2 ${TOUCH_TARGET}`}
+      className={`group absolute -translate-x-1/2 -translate-y-1/2 ${TOUCH_TARGET} ${dimmed ? "pointer-events-none" : ""}`}
       style={{
         ...toSceneBox(asset),
         zIndex: raised ? RAISED_Z : lowering ? LOWERING_Z : asset.z,

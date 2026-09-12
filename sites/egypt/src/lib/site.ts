@@ -14,7 +14,7 @@
 import { publicEnv } from "@egypt/env";
 
 export const siteConfig = {
-  name: "WanderLust",
+  name: "Visit Egypt",
   /** Hero title, run together as one line for `<title>` and share cards. */
   tagline: "Beyond Places. Into Moments.",
   description:
@@ -34,9 +34,9 @@ export const siteConfig = {
    */
   ogImage: "/open-graph.jpg",
   ogImageAlt:
-    "WanderLust — a traveller above a glacial river valley, with the words Beyond Places. Into Moments.",
-  twitterHandle: "@wanderlust",
-  author: "WanderLust",
+    "Visit Egypt — a traveller above a glacial river valley, with the words Beyond Places. Into Moments.",
+  twitterHandle: "@visitegypt",
+  author: "Visit Egypt",
   /** Browser theme-color: the hero's black, which is what loads first. */
   themeColor: "#000000",
 } as const;

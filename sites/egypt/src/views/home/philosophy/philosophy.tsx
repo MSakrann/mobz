@@ -50,7 +50,6 @@ import {
 } from "@egypt/views/home/destinations/destinations.geometry";
 
 import {
-  BACKDROP_PAN,
   CLASS,
   COLLAGE_TURN,
   REVEAL_MS,
@@ -500,11 +499,6 @@ export const Philosophy = ({ content }: PhilosophyProps) => {
    * travel and both are still hit; only where between them the collage lands has
    * moved, and a background offset is the cheapest thing in this block to spend.
    */
-  const backdropPan = (staticFrame ? settled : whole).to((p) => {
-    const to = parseFloat(BACKDROP_PAN.to);
-    return `translate3d(0px, ${(p * to).toFixed(4)}%, 0px)`;
-  });
-
   /**
    * Which curve the heading rides depends on whether it has a block above it to
    * come out from under. With a lead-in it spends the whole of it emerging
@@ -545,22 +539,19 @@ export const Philosophy = ({ content }: PhilosophyProps) => {
       ref={trackRef}
     >
       <div className={CLASS.sticky}>
-        {/* The photograph fills the **screen**, not the scene: it lives in the
-            sticky so it reaches every edge at any window height. The scene
-            below is only the coordinate system the composition is placed in.
-            The box is twice the sticky tall — see CLASS.backdrop. */}
-        <animated.div
-          className={CLASS.backdrop}
-          style={{ transform: backdropPan }}
-        >
+        {/* One screen, contained: the Visit Egypt wallpaper is a 1200×670
+            collage, not the original 5760×6400 pan plate, so a 200% cover box
+            would blow it up and crop it. */}
+        <div className={CLASS.backdrop}>
           <Image
             src={content.media.backdrop.src}
             alt={content.media.backdrop.alt}
             fill
             sizes="100vw"
+            quality={90}
             className="object-cover"
           />
-        </animated.div>
+        </div>
 
         <div className={CLASS.scrim} aria-hidden />
 

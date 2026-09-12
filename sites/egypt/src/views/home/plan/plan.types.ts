@@ -20,8 +20,8 @@ export interface PlanLinkColumn {
 }
 
 export interface PlanContent {
-  /** "Plan a Journey" — italic P and J. */
-  title: TitleSegment[];
+  /** "We will be waiting for you" — one inner array per line. */
+  title: TitleSegment[][];
   /**
    * The handwritten promise on the note, uppercased in CSS — **one entry per
    * line**, in the wrap Figma draws at its 273px width.

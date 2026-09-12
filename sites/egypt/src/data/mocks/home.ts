@@ -9,14 +9,10 @@
  * touching the components — they take it all through props.
  */
 
-import {
-  INK,
-  STICKER_Z,
-} from "@egypt/views/home/destinations/destinations.geometry";
 import type {
   Destination,
   DestinationsContent,
-  StickerAsset,
+  InkMetrics,
 } from "@egypt/views/home/destinations/destinations.types";
 import type { HeroContent } from "@egypt/views/home/hero/hero.types";
 import type { PhilosophyContent } from "@egypt/views/home/philosophy/philosophy.types";
@@ -26,10 +22,10 @@ import type { TravelContent } from "@egypt/views/home/travel/travel.types";
 export const heroContent: HeroContent = {
   // Node 854:950 — italic leading capitals, roman remainder.
   wordmark: [
-    { text: "W", italic: true },
-    { text: "ander" },
-    { text: "L", italic: true },
-    { text: "ust" },
+    { text: "V", italic: true },
+    { text: "isit " },
+    { text: "E", italic: true },
+    { text: "gypt" },
   ],
 
   // Node 881:9
@@ -60,14 +56,8 @@ export const heroContent: HeroContent = {
   cardCaptionTop: ["TRAVEL STORIES", "JOURNAL"], // 857:998
   cardCaptionBottom: ["01.", "REAL JOURNEYS", "42."], // 857:997
 
-  destinationsLabel: "ALL DESTINATIONS", // 856:995
-  // 856:996, 869:1120/1123/1127
-  destinations: [
-    { label: "Iceland", href: "/destinations/iceland" },
-    { label: "Norway", href: "/destinations/norway" },
-    { label: "Japan", href: "/destinations/japan" },
-    { label: "Indonesia", href: "/destinations/indonesia" },
-  ],
+  destinationsLabel: "",
+  destinations: [],
 
   // Node 856:988
   viewModes: [
@@ -77,23 +67,19 @@ export const heroContent: HeroContent = {
 
   media: {
     video: {
-      src: "/assets/hero/Hero-video.mp4",
-      alt: "Travel footage: a glacial river valley seen from the air",
-      width: 2560,
-      height: 1440,
+      src: "/assets/egypt-assets/egypt-hero.jpg",
+      alt: "Visit Egypt — aerial view across the landscape",
+      width: 1104,
+      height: 736,
     },
-    /*
-     * The clip's own last frame, at the clip's own 2560×1440 — matched to it
-     * frame-for-frame so the dissolve changes only how much detail is there.
-     */
     still: {
-      src: "/assets/hero/hero-final-frame.jpg",
+      src: "/assets/egypt-assets/egypt-hero.jpg",
     },
     thumbnail: {
-      src: "/assets/hero/hero-thumb2.png",
-      alt: "A traveller raising a camera over a glacial river valley",
-      width: 1440,
-      height: 800,
+      src: "/assets/egypt-assets/egypt-hero.jpg",
+      alt: "Visit Egypt landscape",
+      width: 1104,
+      height: 736,
     },
   },
 };
@@ -133,268 +119,154 @@ export const heroContent: HeroContent = {
  * photograph, which is the one thing about these files that can be stated
  * without seeing them.
  */
-const destinations: Destination[] = [
-  {
-    id: "iceland",
-    name: "ICELAND",
-    card: {
-      src: "/assets/Block2/Iceland.png",
-      alt: "A polaroid captioned Iceland",
-      cx: 982.59,
-      cy: 370.28,
-      width: 212.092,
-      z: 7,
-      ink: INK["Iceland"],
-    },
-  },
-  {
-    id: "norway",
-    name: "NORWAY",
-    card: {
-      src: "/assets/Block2/Norway.png",
-      alt: "A polaroid captioned Norway",
-      cx: 311.23,
-      cy: 116.27,
-      width: 177.669,
-      z: 11,
-      ink: INK["Norway"],
-    },
-  },
-  {
-    id: "japan",
-    name: "JAPAN",
-    card: {
-      src: "/assets/Block2/Japan.png",
-      alt: "A polaroid captioned Japan",
-      cx: 441.86,
-      cy: 352.08,
-      width: 193.726,
-      z: 15,
-      ink: INK["Japan"],
-    },
-  },
-  {
-    id: "morocco",
-    name: "MOROCCO",
-    card: {
-      src: "/assets/Block2/Morocco.png",
-      alt: "A polaroid captioned Morocco",
-      cx: 381.73,
-      cy: 551.64,
-      width: 191.631,
-      z: 16,
-      ink: INK["Morocco"],
-    },
-  },
-  {
-    id: "switzerland",
-    name: "SWITZERLAND",
-    card: {
-      src: "/assets/Block2/Switzerland.png",
-      alt: "A polaroid captioned Switzerland",
-      cx: 164.38,
-      cy: 44.99,
-      width: 223.278,
-      z: 13,
-      ink: INK["Switzerland"],
-    },
-  },
-  {
-    id: "italy",
-    name: "ITALY",
-    card: {
-      src: "/assets/Block2/Italy.png",
-      alt: "A polaroid captioned Italy",
-      cx: 292.65,
-      cy: 406.16,
-      width: 185.295,
-      z: 10,
-      ink: INK["Italy"],
-    },
-  },
-  {
-    id: "france",
-    name: "FRANCE",
-    card: {
-      src: "/assets/Block2/France.png",
-      alt: "A polaroid captioned France",
-      cx: 723.58,
-      cy: 413.78,
-      width: 208.139,
-      z: 4,
-      ink: INK["France"],
-    },
-  },
-  {
-    id: "portugal",
-    name: "PORTUGAL",
-    card: {
-      src: "/assets/Block2/Portugal.png",
-      alt: "A polaroid captioned Portugal",
-      cx: 1154.05,
-      cy: 544.61,
-      width: 212.092,
-      z: 1,
-      ink: INK["Portugal"],
-    },
-  },
-  {
-    id: "spain",
-    name: "SPAIN",
-    card: {
-      src: "/assets/Block2/Spain.png",
-      alt: "A polaroid captioned Spain",
-      cx: 867.36,
-      cy: 398.36,
-      width: 144.16,
-      z: 8,
-      ink: INK["Spain"],
-    },
-  },
-  {
-    id: "greece",
-    name: "GREECE",
-    card: {
-      src: "/assets/Block2/Greece.png",
-      alt: "A polaroid captioned Greece",
-      cx: 1285.05,
-      cy: 82.61,
-      width: 212.092,
-      z: 14,
-      ink: INK["Greece"],
-    },
-  },
-  {
-    id: "austria",
-    name: "AUSTRIA",
-    card: {
-      src: "/assets/Block2/Austria.png",
-      alt: "A polaroid captioned Austria",
-      cx: 1164.92,
-      cy: 137.61,
-      width: 211.111,
-      z: 12,
-      ink: INK["Austria"],
-    },
-  },
-  {
-    id: "canada",
-    name: "CANADA",
-    card: {
-      src: "/assets/Block2/Canada.png",
-      alt: "A polaroid captioned Canada",
-      cx: 802.95,
-      cy: 566.67,
-      width: 182.347,
-      z: 5,
-      ink: INK["Canada"],
-    },
-  },
-  {
-    id: "new-zealand",
-    name: "NEW ZEALAND",
-    card: {
-      src: "/assets/Block2/New Zealand.png",
-      alt: "A polaroid captioned New Zealand",
-      cx: 1381.78,
-      cy: 137.49,
-      width: 197.924,
-      z: 3,
-      ink: INK["New Zealand"],
-    },
-  },
-  {
-    id: "australia",
-    name: "AUSTRALIA",
-    card: {
-      src: "/assets/Block2/Australia.png",
-      alt: "A polaroid captioned Australia",
-      cx: 1065.79,
-      cy: 471.88,
-      width: 172.42,
-      z: 6,
-      ink: INK["Australia"],
-    },
-  },
-  {
-    id: "slovenia",
-    name: "SLOVENIA",
-    card: {
-      src: "/assets/Block2/Slovenia.png",
-      alt: "A polaroid captioned Slovenia",
-      cx: 576.63,
-      cy: 452.42,
-      width: 208.582,
-      z: 9,
-      ink: INK["Slovenia"],
-    },
-  },
-  {
-    id: "istanbul",
-    name: "ISTANBUL",
-    card: {
-      src: "/assets/Block2/Istanbul.png",
-      alt: "A polaroid captioned Istanbul",
-      cx: 654.54,
-      cy: 319.71,
-      width: 190.046,
-      z: 2,
-      ink: INK["Istanbul"],
-    },
-  },
-];
+const EGYPT = "/assets/egypt-assets";
+
+/** Tight photograph — no polaroid margin in the new city files. */
+const photoInk = (width: number, height: number): InkMetrics => ({
+  box: 1,
+  boxY: 1,
+  fx: 0.5,
+  fy: 0.5,
+  ratio: width / height,
+});
+
+const INK_TALL = photoInk(736, 1307);
+const INK_MID = photoInk(736, 1104);
+const INK_FAYOUM = photoInk(736, 981);
 
 /**
- * The three marks that belong to no country and sit above every card.
- *
- * Centre and size straight from the frame — `image 587`, `Basic stamp` and
- * `image 585` at the top level of 1784:1916 — with **no ink correction**. Each
- * file already has exactly the ratio its box is given, so the box goes to the
- * file whole. See `StickerAsset`.
- *
- * These three moved when the frame was redrawn, and the numbers that came with
- * the brief were the old frame's: the stamp's 631.76 and the flag's 1080 are
- * recorded against the previous version in destinations.md's rotated-leaf table.
- *
- * The frame's own numbers then needed the correction that table is about. For a
- * **rotated leaf** `get_metadata` reports the x of the rotated rectangle's own
- * corner, not the left edge of the box it occupies, and the two differ by
- * `height × sin θ`. Measured against a 1440×687 render of the frame by colour
- * centroid — the stamp's green, the lupin's violet — the lupin sat 18.5px right
- * (66.319 × sin 16.2°) and the stamp 11.1px (47.111 × sin 13.6°). Both are
- * subtracted here. The flag is not rotated and needed nothing, which is the same
- * result the old frame's table recorded for it.
- *
- * `STICKER_Z` puts them over the pile at rest; a raised card comes above them,
- * which is what `RAISED_Z` is for.
+ * Ten Egyptian cities: five names in the left column, five in the right.
  */
-const destinationStickers: StickerAsset[] = [
+const destinations: Destination[] = [
   {
-    src: "/assets/Block2/Sticker1-art.png",
-    alt: "",
-    cx: 364.53,
-    cy: 328.1594,
-    width: 54.6133,
-    height: 66.3188,
-    z: STICKER_Z,
+    id: "siwa-oasis",
+    name: "SIWA OASIS",
+    card: {
+      src: `${EGYPT}/siwa.jpg`,
+      alt: "Siwa Oasis",
+      cx: 900,
+      cy: 250,
+      width: 200,
+      z: 7,
+      ink: INK_TALL,
+    },
   },
   {
-    src: "/assets/Block2/Sticker3.png",
-    alt: "",
-    cx: 618.97,
-    cy: 347.5557,
-    width: 40.6249,
-    height: 47.1114,
-    z: STICKER_Z,
+    id: "cairo",
+    name: "CAIRO",
+    card: {
+      src: `${EGYPT}/nile.jpg`,
+      alt: "Cairo on the Nile",
+      cx: 260,
+      cy: 290,
+      width: 200,
+      z: 11,
+      ink: INK_TALL,
+    },
   },
   {
-    src: "/assets/Block2/Sticker4.png",
-    alt: "",
-    cx: 1075.5,
-    cy: 338.5,
-    width: 35,
-    height: 29,
-    z: STICKER_Z,
+    id: "aswan",
+    name: "ASWAN",
+    card: {
+      src: `${EGYPT}/aswan.jpg`,
+      alt: "Aswan",
+      cx: 470,
+      cy: 200,
+      width: 210,
+      z: 15,
+      ink: INK_MID,
+    },
+  },
+  {
+    id: "luxor",
+    name: "LUXOR",
+    card: {
+      src: `${EGYPT}/luxor.jpg`,
+      alt: "Luxor",
+      cx: 500,
+      cy: 500,
+      width: 210,
+      z: 16,
+      ink: INK_MID,
+    },
+  },
+  {
+    id: "el-gouna",
+    name: "EL GOUNA",
+    card: {
+      src: `${EGYPT}/gouna.jpg`,
+      alt: "El Gouna",
+      cx: 200,
+      cy: 110,
+      width: 205,
+      z: 13,
+      ink: INK_MID,
+    },
+  },
+  {
+    id: "dahab",
+    name: "DAHAB",
+    card: {
+      src: `${EGYPT}/dahab.jpg`,
+      alt: "Dahab",
+      cx: 330,
+      cy: 470,
+      width: 195,
+      z: 10,
+      ink: INK_MID,
+    },
+  },
+  {
+    id: "al-fayoum",
+    name: "AL FAYOUM",
+    card: {
+      src: `${EGYPT}/fayoum.jpg`,
+      alt: "Al Fayoum",
+      cx: 720,
+      cy: 455,
+      width: 205,
+      z: 4,
+      ink: INK_FAYOUM,
+    },
+  },
+  {
+    id: "hurghada",
+    name: "HURGHADA",
+    card: {
+      src: `${EGYPT}/hurghada.jpg`,
+      alt: "Hurghada",
+      cx: 1140,
+      cy: 490,
+      width: 210,
+      z: 1,
+      ink: INK_MID,
+    },
+  },
+  {
+    id: "marsa-alam",
+    name: "MARSA ALAM",
+    card: {
+      src: `${EGYPT}/marsa-alam.jpg`,
+      alt: "Marsa Alam",
+      cx: 1020,
+      cy: 380,
+      width: 195,
+      z: 8,
+      ink: INK_MID,
+    },
+  },
+  {
+    id: "sharm-el-sheikh",
+    name: "SHARM EL SHEIKH",
+    card: {
+      src: `${EGYPT}/sharm.jpg`,
+      alt: "Sharm El Sheikh",
+      cx: 1220,
+      cy: 160,
+      width: 210,
+      z: 14,
+      ink: INK_MID,
+    },
   },
 ];
 
@@ -410,9 +282,9 @@ export const destinationsContent: DestinationsContent = {
     ],
   ],
 
-  // 01–08 fill the left column, 09–16 the right.
+  // 01–05 fill the left column, 06–10 the right.
   countries: destinations,
-  stickers: destinationStickers,
+  stickers: [],
 };
 
 /* ---------------------------------------------------------------------------
@@ -448,10 +320,7 @@ const philosophyTitle: PhilosophyContent["title"] = [
 export const philosophyContent: PhilosophyContent = {
   title: philosophyTitle,
 
-  asideLeft: [
-    "We plan trips for the moments you'll still ",
-    "talk about years later.",
-  ],
+  asideLeft: ["Various activities and unforgettable destinations"],
   asideRight: [
     "The quiet mornings, the unexpected turns, ",
     "the places you almost didn't find.",
@@ -461,16 +330,16 @@ export const philosophyContent: PhilosophyContent = {
 
   media: {
     backdrop: {
-      src: "/assets/Block 3/pexels-arthousestudio-4344885.jpg",
-      alt: "A glacial river braiding across a green valley, seen from the air",
-      width: 5760,
-      height: 6400,
+      src: "/assets/egypt-assets/egypt-wallpaper.jpg",
+      alt: "Egypt landscape backdrop",
+      width: 1200,
+      height: 670,
     },
     collage: {
-      src: "/assets/Block 3/Collage.png",
-      alt: "A polaroid of a traveller with her arms outstretched, taped over torn notebook pages",
-      width: 1504,
-      height: 1616,
+      src: "/assets/egypt-assets/egypt-card.jpg",
+      alt: "Visit Egypt still",
+      width: 736,
+      height: 1104,
     },
   },
 };
@@ -492,12 +361,10 @@ export const philosophyContent: PhilosophyContent = {
 export const travelContent: TravelContent = {
   // Node 1680:1329 — italic H, W, T.
   title: [
-    { text: "H", italic: true },
-    { text: "ow " },
-    { text: "W", italic: true },
-    { text: "e " },
-    { text: "T", italic: true },
-    { text: "ravel" },
+    { text: "V", italic: true },
+    { text: "arious " },
+    { text: "a", italic: true },
+    { text: "ctivities" },
   ],
 
   // Node 1680:1334
@@ -505,69 +372,71 @@ export const travelContent: TravelContent = {
 
   panels: [
     {
-      id: "small-group-trips",
+      id: "desert-glamping",
       title: [
-        { text: "S", italic: true },
-        { text: "mall " },
+        { text: "D", italic: true },
+        { text: "esert " },
         { text: "G", italic: true },
-        { text: "roup " },
-        { text: "T", italic: true },
-        { text: "rips" },
+        { text: "lamping" },
       ],
-      body: "We travel in small groups so everyone feels included, heard and free to be themselves.",
-      signOff: "More connection, less crowd.",
+      body: "",
+      signOff: "",
       bodyWidth: 390,
       media: {
-        src: "/assets/Block4/OpenedImage1.png",
-        alt: "Four travellers in bright rain jackets cheering on a mossy clifftop above a canyon",
+        src: `${EGYPT}/glamping.jpg`,
+        alt: "Desert glamping",
       },
     },
     {
-      id: "road-trips",
+      id: "ancient-history",
       title: [
-        { text: "R", italic: true },
-        { text: "oad " },
-        { text: "T", italic: true },
-        { text: "rips" },
+        { text: "A", italic: true },
+        { text: "ncient " },
+        { text: "H", italic: true },
+        { text: "istory" },
       ],
-      body: "Scenic roads, unexpected stops and the freedom to change the plan when it feels right.",
-      signOff: "The best views aren't on Google Maps.",
+      body: "",
+      signOff: "",
       bodyWidth: 420,
       media: {
-        src: "/assets/Block4/OpenedImage2.png",
-        alt: "A white car alone on a road across black sand, under a jagged mountain ridge",
+        src: `${EGYPT}/musuem.jpg`,
+        alt: "Ancient history",
       },
     },
     {
-      id: "handpicked-stays",
+      id: "cultural-souvenirs",
       title: [
-        { text: "H", italic: true },
-        { text: "andpicked " },
+        { text: "C", italic: true },
+        { text: "ultural " },
         { text: "S", italic: true },
-        { text: "tays" },
+        { text: "ouvenirs" },
       ],
-      body: "We choose places with soul. Local, beautiful, comfortable and run by people who care.",
-      signOff: "Stay somewhere you'll remember.",
+      body: "",
+      signOff: "",
       bodyWidth: 400,
       media: {
-        src: "/assets/Block4/OpenedImage3.png",
-        alt: "A traveller standing on wet rocks beside a turquoise waterfall",
+        src: `${EGYPT}/souvenirs.jpg`,
+        alt: "Cultural souvenirs",
       },
     },
     {
-      id: "local-experiences",
+      id: "red-sea",
       title: [
-        { text: "L", italic: true },
-        { text: "ocal " },
-        { text: "E", italic: true },
-        { text: "xperiences" },
+        { text: "C", italic: true },
+        { text: "olourful " },
+        { text: "e", italic: true },
+        { text: "xperience in the " },
+        { text: "R", italic: true },
+        { text: "ed " },
+        { text: "S", italic: true },
+        { text: "ea" },
       ],
-      body: "We meet local people, try real food, learn the stories and see the places that don't make it to the guidebooks.",
-      signOff: "The heart of the journey.",
+      body: "",
+      signOff: "",
       bodyWidth: 490,
       media: {
-        src: "/assets/Block4/OpenedImage4.png",
-        alt: "Four people around a picnic table with warm mugs, snow-dusted hills behind them",
+        src: `${EGYPT}/red-sea.jpg`,
+        alt: "Colourful experience in the Red Sea",
       },
     },
   ],
@@ -583,19 +452,31 @@ const BLOCK_5 = "/assets/Block 5";
 export const planContent: PlanContent = {
   // Node 1705:258 — italic P and J, black rather than cream.
   title: [
-    { text: "P", italic: true },
-    { text: "lan a " },
-    { text: "J", italic: true },
-    { text: "ourney" },
+    [
+      { text: "W", italic: true },
+      { text: "e " },
+      { text: "w", italic: true },
+      { text: "ill " },
+      { text: "b", italic: true },
+      { text: "e " },
+      { text: "w", italic: true },
+      { text: "aiting " },
+      { text: "f", italic: true },
+      { text: "or" },
+    ],
+    [
+      { text: "y", italic: true },
+      { text: "ou" },
+    ],
   ],
 
   // Node 1705:263 / 1705:261 — both uppercased in CSS, not in the copy.
   note: [
-    "Tell us what you're",
-    "dreaming of. We'll shape",
-    "the journey.",
+    "Whatever you're",
+    "dreaming of. Egypt",
+    "has it.",
   ],
-  noteAside: "ready when you are",
+  noteAside: "",
 
   // Node 1705:270
   action: { label: "Start planning", href: "/plan" },
@@ -603,23 +484,13 @@ export const planContent: PlanContent = {
   footer: {
     // The hero's wordmark, same segmentation.
     wordmark: [
-      { text: "W", italic: true },
-      { text: "ander" },
-      { text: "L", italic: true },
-      { text: "ust" },
+      { text: "V", italic: true },
+      { text: "isit " },
+      { text: "E", italic: true },
+      { text: "gypt" },
     ],
 
-    // Nodes 1705:277 / 284 / 291. Widths live in plan.geometry.ts.
     columns: [
-      {
-        title: "DESTINATIONS",
-        links: [
-          { label: "Iceland", href: "/destinations/iceland" },
-          { label: "Norway", href: "/destinations/norway" },
-          { label: "Japan", href: "/destinations/japan" },
-          { label: "Indonesia", href: "/destinations/indonesia" },
-        ],
-      },
       {
         title: "EXPERIENCES",
         links: [
@@ -648,19 +519,19 @@ export const planContent: PlanContent = {
     // Nodes 1705:305 / 310 / 313 — Instagram, Facebook, YouTube, read off the
     // marks themselves. TODO: the account URLs are placeholders.
     social: [
-      { src: `${BLOCK_5}/SocialMedia1.svg`, alt: "Wanderlust on Instagram", href: "#" },
-      { src: `${BLOCK_5}/SocialMedia2.svg`, alt: "Wanderlust on Facebook", href: "#" },
-      { src: `${BLOCK_5}/SocialMedia3.png`, alt: "Wanderlust on YouTube", href: "#" },
+      { src: `${BLOCK_5}/SocialMedia1.svg`, alt: "Visit Egypt on Instagram", href: "#" },
+      { src: `${BLOCK_5}/SocialMedia2.svg`, alt: "Visit Egypt on Facebook", href: "#" },
+      { src: `${BLOCK_5}/SocialMedia3.png`, alt: "Visit Egypt on YouTube", href: "#" },
     ],
 
     // Node 1705:274
-    copyright: "© 2024 Wanderlust. All rights reserved.",
+    copyright: "© 2026 Visit Egypt. All rights reserved.",
   },
 
   media: {
     backdrop: {
-      src: `${BLOCK_5}/BackgroundImage.png`,
-      alt: "A green ridge running down into cloud",
+      src: `${EGYPT}/wallpaper-2.jpg`,
+      alt: "Egypt landscape",
     },
     far: {
       src: `${BLOCK_5}/03_mountains_midground 1.png`,
