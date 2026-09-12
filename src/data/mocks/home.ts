@@ -91,9 +91,8 @@ export interface LavaConfig {
 
 export const heroContent: HeroContent = {
   videoSrc: "/assets/home/hero.mp4",
-  infoLabels: ["Visual Identity", "Web & Interactive", "Brand Strategy"],
-  description:
-    "Independent Art Director & Designer specializing\nin digital experiences and high-end visual solutions.",
+  infoLabels: ["Visual Identity", "Web & Interactive", "Backend Development"],
+  description: "Building websites that make an impression",
   title: "Mobz Studio",
 };
 
@@ -142,12 +141,12 @@ export const featuresContent: FeaturesSectionContent = {
   optimizationText:
     "We combine aesthetic vision with technical expertise to create designs that are not only beautiful but also perform seamlessly across all platforms.",
   mainCard: {
-    title: "Digital Branding",
+    title: "Interactive Website Building",
     description:
       "We craft compelling brand narratives and visual systems that resonate with your target audience, ensuring a strong and memorable market presence.",
     specs: [
-      { key: "Core Tools", value: "Figma / After Effects" },
-      { key: "Deliverables", value: "UI/UX / Brand Guidelines" },
+      { key: "Core Tools", value: "Three.js / Spline" },
+      { key: "Deliverables", value: "fully working frontend and backend website" },
     ],
     cta: "Start Project",
   },
@@ -155,14 +154,14 @@ export const featuresContent: FeaturesSectionContent = {
     {
       title: "Project Timelines",
       specs: [
-        { key: "Minimum Duration", value: "2 weeks" },
-        { key: "Average Timeline", value: "4-8 weeks" },
+        { key: "Minimum Duration", value: "1 week" },
+        { key: "Average Timeline", value: "1-3 weeks" },
       ],
     },
     {
       title: "Our Impact",
       specs: [
-        { key: "Successfully Delivered", value: "over 50 projects" },
+        { key: "Successfully Delivered", value: "over 10 projects" },
         { key: "Global Clients", value: "across 15 countries" },
       ],
     },
@@ -181,41 +180,49 @@ export const carouselContent: CarouselSectionContent = {
   ],
   projects: [
     {
-      title: "Lumina X-M",
+      title: "Drape",
+      category: "AI brand manager",
+      year: "2026",
+      image: "/assets/work/drape.jpg",
+    },
+    {
+      title: "Artefakt",
+      category: "E-commerce",
+      year: "2026",
+      image: "/assets/work/clothing.jpg",
+    },
+    {
+      title: "Visit Egypt",
+      category: "Art Direction",
+      year: "2026",
+      image: "/assets/work/egypt.jpg",
+    },
+    {
+      title: "Sodic",
       category: "Brand Identity",
       year: "2026",
-      image: "/assets/home/1.webp",
-    },
-    {
-      title: "Nexus 43-M",
-      category: "E-Commerce",
-      year: "2026",
-      image: "/assets/home/2.webp",
-    },
-    {
-      title: "MC80 FT-6",
-      category: "Interactive",
-      year: "2025",
-      image: "/assets/home/1.webp",
-    },
-    {
-      title: "Aero Vision",
-      category: "Art Direction",
-      year: "2025",
-      image: "/assets/home/2.webp",
+      image: "/assets/work/sodic.jpg",
     },
   ],
 };
 
 export const contactContent: ContactSectionContent = {
   title: "GET IN TOUCH",
-  phone: { label: "+82 10-7722-8976", href: "tel:+821077228976" },
-  email: { label: "hello@mobz.studio", href: "mailto:hello@mobz.studio" },
+  phone: { label: "+201289999530", href: "tel:+201289999530" },
+  email: {
+    label: "mohabelsakran@gmail.com",
+    href: "mailto:mohabelsakran@gmail.com",
+  },
   socialsLabel: "Our socials",
   socials: [
-    { label: "Instagram", href: "#" },
-    { label: "Behance", href: "#" },
-    { label: "LinkedIn", href: "#" },
+    {
+      label: "Instagram",
+      href: "https://www.instagram.com/mouhabelsakran?stkn=cTU0OGtoZzdsZGtr&utm_source=qr",
+    },
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/mouhab-mahmoud-76a131161?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    },
   ],
 };
 

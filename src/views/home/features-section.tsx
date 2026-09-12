@@ -1,11 +1,16 @@
+"use client";
+
 /**
  * "Comprehensive Design Solutions" section (index.html .features-section) —
  * scramble heading, services list, and a staggered blur-reveal card grid
  * (main card + two side cards, 0/150/300ms delays).
  */
 
+import { MouseEvent } from "react";
+
 import { HoverAction } from "@/components/ui/hover-action";
 import { FeaturesSectionContent, SpecRow } from "@/data/mocks/home";
+import { scrollTo } from "@/utils/scroll-to";
 
 import { BlurReveal } from "./blur-reveal";
 import { ScrambleHeading } from "./scramble-heading";
@@ -19,10 +24,10 @@ const Specs = ({ specs }: { specs: SpecRow[] }) => (
     {specs.map((spec) => (
       <div
         key={spec.key}
-        className="flex justify-between border-b border-foreground/10 pb-2.5"
+        className="flex flex-col gap-1 border-b border-foreground/10 pb-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
       >
         <dt className="text-base text-foreground/60">{spec.key}</dt>
-        <dd className="text-right text-base font-normal text-foreground">
+        <dd className="text-base font-normal text-foreground sm:text-right">
           {spec.value}
         </dd>
       </div>
@@ -91,6 +96,12 @@ export const FeaturesSection = ({ content }: FeaturesSectionProps) => (
           </div>
         </div>
         <HoverAction
+          as="a"
+          href="#contact"
+          onClick={(event: MouseEvent<HTMLElement>) => {
+            event.preventDefault();
+            scrollTo("contact");
+          }}
           className="text-circle-btn mx-auto flex aspect-square w-3/5 cursor-pointer items-center justify-center self-center rounded-full border-[0.125rem] border-dotted border-foreground/60 bg-foreground/[0.02] font-light text-foreground md:w-auto md:flex-1"
           overlayClassName="-inset-[0.125rem] rounded-full border-[0.125rem] border-dotted border-foreground bg-foreground/[0.06]"
         >
