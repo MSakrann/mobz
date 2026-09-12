@@ -9,20 +9,54 @@ import { useShallow } from "zustand/react/shallow";
 
 export const scrollSpeed = { current: 1 };
 
+function prefersNativeScroll() {
+  if (typeof window === "undefined") return false;
+  return (
+    navigator.maxTouchPoints > 0 ||
+    window.matchMedia("(pointer: coarse)").matches ||
+    window.matchMedia("(hover: none)").matches
+  );
+}
+
+/** Safari ignores overscroll-behavior for pull-to-refresh; block it in every browser. */
+function useBlockPullToRefresh() {
+  useEffect(() => {
+    let lastY = 0;
+    const onStart = (event: TouchEvent) => {
+      lastY = event.touches[0]?.clientY ?? 0;
+    };
+    const onMove = (event: TouchEvent) => {
+      if (event.touches.length !== 1) return;
+      const y = event.touches[0].clientY;
+      const pullingDown = y > lastY;
+      lastY = y;
+      const top =
+        window.scrollY ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop ||
+        0;
+      if (top <= 0 && pullingDown) event.preventDefault();
+    };
+    document.addEventListener("touchstart", onStart, { passive: true });
+    document.addEventListener("touchmove", onMove, { capture: true, passive: false });
+    return () => {
+      document.removeEventListener("touchstart", onStart);
+      document.removeEventListener("touchmove", onMove, { capture: true });
+    };
+  }, []);
+}
+
 export function ScrollLayout({ children }: { children: React.ReactNode }) {
-  // Server-safe rendering
   return (
     <div className="scroll-layout">
-      {/* Static content that can be rendered on server */}
       <div className="scroll-layout-content">{children}</div>
-
-      {/* Client-only functionality */}
       <ScrollController />
     </div>
   );
 }
 
 function ScrollController() {
+  useBlockPullToRefresh();
   const isEnableScroll = useScroll((state) => state.isEnableScroll);
   const [hash, setHash] = useState<string>("");
   const [lenis, setLenis] = useScroll(
@@ -32,32 +66,24 @@ function ScrollController() {
   const savedPathname = useRef("");
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    window.scrollTo(0, 0);
+    if (prefersNativeScroll()) return;
 
-    // iOS (including Firefox) pull-to-refresh + Lenis fighting native scroll
-    // reloads the document. Use native scrolling on touch devices.
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    if (coarse) return;
-
-    const lenis = new Lenis({
+    const instance = new Lenis({
       smoothWheel: true,
     });
-    (window as typeof window & { lenis: Lenis }).lenis = lenis;
-    setLenis(lenis);
+    (window as typeof window & { lenis: Lenis }).lenis = instance;
+    setLenis(instance);
 
     let rafId = 0;
     const raf = (time: number) => {
-      lenis.raf(time);
+      instance.raf(time);
       rafId = requestAnimationFrame(raf);
     };
     rafId = requestAnimationFrame(raf);
 
     return () => {
-      // Cancel the loop before destroying Lenis — otherwise it keeps calling
-      // `raf` on a destroyed instance after unmount/HMR.
       cancelAnimationFrame(rafId);
-      lenis.destroy();
+      instance.destroy();
       setLenis(null);
     };
   }, [setLenis]);
@@ -65,10 +91,6 @@ function ScrollController() {
   useEffect(() => {
     if (isEnableScroll) {
       enableNativeScroll(true);
-      // While scroll was locked, `html { height: 100% }` collapsed the
-      // document, so Lenis cached `limit = 0`. Its ResizeObserver is debounced
-      // (250ms) — without a synchronous resize the first wheel gesture after
-      // unlock is clamped to 0 and scrolls nothing.
       lenis?.resize();
       lenis?.start();
     } else {
@@ -100,21 +122,18 @@ function ScrollController() {
     }
   }, [pathname]);
 
-  return null; // This component doesn't render anything visible
+  return null;
 }
 
 const enableNativeScroll = (value: boolean) => {
   if (typeof document === "undefined") return;
-  if (!document) return;
-  const html = document.querySelector("html");
-  if (!html) return;
+  const html = document.documentElement;
+  const body = document.body;
   if (!value) {
-    html.style.position = "relative";
     html.style.overflow = "hidden";
-    html.style.height = "100%";
+    body.style.overflow = "hidden";
   } else {
-    html.style.removeProperty("position");
     html.style.removeProperty("overflow");
-    html.style.removeProperty("height");
+    body.style.removeProperty("overflow");
   }
 };

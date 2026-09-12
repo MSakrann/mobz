@@ -60,8 +60,10 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 
-html {
-  overscroll-behavior-y: none;
+html,
+body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
 }
 
 body::-webkit-scrollbar {

@@ -12,6 +12,7 @@ import { useEffect, useRef } from "react";
 
 import { useLoop } from "@/hooks/animation/use-render-loop";
 import { LavaConfig } from "@/data/mocks/home";
+import { usePreloader } from "./preloader-store";
 
 export interface LavaBackgroundProps {
   config: LavaConfig;
@@ -198,84 +199,93 @@ export const LavaBackground = ({ config }: LavaBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stateRef = useRef<GlState | null>(null);
   const visible = useRef(false);
+  const mediaReady = usePreloader((s) => s.phase !== "loading");
 
   useEffect(() => {
+    if (!mediaReady) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl", {
-      alpha: false,
-      antialias: false,
-      depth: false,
-      stencil: false,
-      powerPreference: window.matchMedia("(pointer: coarse)").matches
-        ? "low-power"
-        : "high-performance",
-    });
-    if (!gl) return;
+    let cancelled = false;
+    let cleanupGl: (() => void) | undefined;
 
-    const vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER);
-    const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER);
-    if (!vertexShader || !fragmentShader) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible.current = entry.isIntersecting;
+        if (!entry.isIntersecting || cancelled || cleanupGl) return;
+        const gl = canvas.getContext("webgl", {
+          alpha: false,
+          antialias: false,
+          depth: false,
+          stencil: false,
+          powerPreference: "low-power",
+        });
+        if (!gl) return;
 
-    const program = gl.createProgram();
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
-    gl.useProgram(program);
+        const vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER);
+        const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, FRAGMENT_SHADER);
+        if (!vertexShader || !fragmentShader) return;
 
-    const positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-      gl.STATIC_DRAW,
+        const program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+        gl.useProgram(program);
+
+        const positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+          gl.STATIC_DRAW,
+        );
+        const positionLocation = gl.getAttribLocation(program, "position");
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+        gl.uniform1f(gl.getUniformLocation(program, "u_speed"), config.speed);
+        gl.uniform1f(gl.getUniformLocation(program, "u_blend"), config.blend);
+        config.colors.forEach((hex, i) => {
+          gl.uniform3fv(gl.getUniformLocation(program, `u_col${i + 1}`), hexToRgb(hex));
+        });
+
+        stateRef.current = {
+          gl,
+          resolutionLocation: gl.getUniformLocation(program, "u_resolution"),
+          timeLocation: gl.getUniformLocation(program, "u_time"),
+          startTime: null,
+        };
+
+        const resizeCanvas = () => {
+          const rect = canvas.parentElement?.getBoundingClientRect();
+          if (!rect || rect.width === 0 || rect.height === 0) return;
+          const scale = Math.min(
+            1,
+            Math.sqrt(MAX_RENDER_PIXELS / (rect.width * rect.height)),
+          );
+          canvas.width = Math.max(1, Math.round(rect.width * scale));
+          canvas.height = Math.max(1, Math.round(rect.height * scale));
+          gl.viewport(0, 0, canvas.width, canvas.height);
+        };
+        resizeCanvas();
+
+        const resizeObserver = new ResizeObserver(resizeCanvas);
+        if (canvas.parentElement) resizeObserver.observe(canvas.parentElement);
+        cleanupGl = () => {
+          resizeObserver.disconnect();
+          stateRef.current = null;
+        };
+      },
+      { rootMargin: "80px" },
     );
-    const positionLocation = gl.getAttribLocation(program, "position");
-    gl.enableVertexAttribArray(positionLocation);
-    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-    // static uniforms — set once from config
-    gl.uniform1f(gl.getUniformLocation(program, "u_speed"), config.speed);
-    gl.uniform1f(gl.getUniformLocation(program, "u_blend"), config.blend);
-    config.colors.forEach((hex, i) => {
-      gl.uniform3fv(gl.getUniformLocation(program, `u_col${i + 1}`), hexToRgb(hex));
-    });
-
-    stateRef.current = {
-      gl,
-      resolutionLocation: gl.getUniformLocation(program, "u_resolution"),
-      timeLocation: gl.getUniformLocation(program, "u_time"),
-      startTime: null,
-    };
-
-    const resizeCanvas = () => {
-      const rect = canvas.parentElement?.getBoundingClientRect();
-      if (!rect || rect.width === 0 || rect.height === 0) return;
-      const scale = Math.min(
-        1,
-        Math.sqrt(MAX_RENDER_PIXELS / (rect.width * rect.height)),
-      );
-      canvas.width = Math.max(1, Math.round(rect.width * scale));
-      canvas.height = Math.max(1, Math.round(rect.height * scale));
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    };
-    resizeCanvas();
-
-    const resizeObserver = new ResizeObserver(resizeCanvas);
-    if (canvas.parentElement) resizeObserver.observe(canvas.parentElement);
-
-    const visibilityObserver = new IntersectionObserver(([entry]) => {
-      visible.current = entry.isIntersecting;
-    });
-    visibilityObserver.observe(canvas);
+    io.observe(canvas);
 
     return () => {
-      resizeObserver.disconnect();
-      visibilityObserver.disconnect();
-      stateRef.current = null;
+      cancelled = true;
+      io.disconnect();
+      cleanupGl?.();
     };
-  }, [config]);
+  }, [config, mediaReady]);
 
   useLoop(
     (time) => {

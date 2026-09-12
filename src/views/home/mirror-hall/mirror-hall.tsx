@@ -4,6 +4,7 @@ import { Open_Sans } from "next/font/google";
 import { useEffect, useRef } from "react";
 
 import { LIVE_WORK_CARDS, WORK_CARDS } from "@/data/work-projects";
+import { usePreloader } from "../preloader-store";
 import { consumeLandingReturn, markLandingReturn } from "../reload-on-back";
 
 import "./mirror-hall.css";
@@ -21,6 +22,7 @@ export const MirrorHall = () => {
   const numRef = useRef<HTMLSpanElement>(null);
   const totalRef = useRef<HTMLSpanElement>(null);
   const dotsRef = useRef<HTMLDivElement>(null);
+  const mediaReady = usePreloader((s) => s.phase !== "loading");
 
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
@@ -31,6 +33,7 @@ export const MirrorHall = () => {
   }, []);
 
   useEffect(() => {
+    if (!mediaReady) return;
     const host = stageRef.current;
     const section = sectionRef.current;
     const focusName = nameRef.current;
@@ -41,39 +44,52 @@ export const MirrorHall = () => {
       return;
     }
 
-    const dots = WORK_CARDS.map(() => {
-      const i = document.createElement("i");
-      dotsWrap.appendChild(i);
-      return i;
-    });
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let cancelled = false;
     let unmount: () => void = () => undefined;
+    let started = false;
 
-    void import("./mount-hall").then(({ mountMirrorHall }) => {
-      if (cancelled || !host.isConnected) return;
-      unmount = mountMirrorHall(host, {
-        cards: WORK_CARDS,
-        reducedMotion,
-        section,
-        focusName,
-        focusNum,
-        focusTotal,
-        dots,
-        onNavigate: (href) => {
-          markLandingReturn();
-          window.location.href = href;
-        },
+    const start = () => {
+      if (cancelled || started) return;
+      started = true;
+      const dots = WORK_CARDS.map(() => {
+        const i = document.createElement("i");
+        dotsWrap.appendChild(i);
+        return i;
       });
-    });
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      void import("./mount-hall").then(({ mountMirrorHall }) => {
+        if (cancelled || !host.isConnected) return;
+        unmount = mountMirrorHall(host, {
+          cards: WORK_CARDS,
+          reducedMotion,
+          section,
+          focusName,
+          focusNum,
+          focusTotal,
+          dots,
+          onNavigate: (href) => {
+            markLandingReturn();
+            window.location.href = href;
+          },
+        });
+      });
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) start();
+      },
+      { rootMargin: "120px" },
+    );
+    io.observe(section);
 
     return () => {
       cancelled = true;
+      io.disconnect();
       unmount();
       dotsWrap.replaceChildren();
     };
-  }, []);
+  }, [mediaReady]);
 
   return (
     <section

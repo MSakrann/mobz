@@ -74,7 +74,7 @@ export const HeroSection = ({ content }: HeroSectionProps) => {
     const observer = new IntersectionObserver(([entry]) => {
       visible.current = entry.isIntersecting;
       const video = videoRef.current;
-      if (!video) return;
+      if (!video?.src) return;
       if (entry.isIntersecting) {
         if (video.paused) video.play().catch(() => undefined);
       } else if (!video.paused) {
@@ -83,7 +83,7 @@ export const HeroSection = ({ content }: HeroSectionProps) => {
     });
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [phase]);
 
   useLoop(
     () => {
@@ -121,7 +121,7 @@ export const HeroSection = ({ content }: HeroSectionProps) => {
     >
       <video
         ref={videoRef}
-        src={content.videoSrc}
+        src={phase === "loading" ? undefined : content.videoSrc}
         className="absolute inset-0 z-[1] size-full object-cover"
         autoPlay
         loop
