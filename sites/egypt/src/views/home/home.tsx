@@ -27,7 +27,7 @@ import { Travel } from "./travel";
  * `use-media-ready`). The thumbnails arrive much later in the section's own
  * timeline and are left to load on their own.
  */
-const CRITICAL_MEDIA = ["egypt-hero.jpg"] as const;
+const CRITICAL_MEDIA = ["egypt-hero-live.jpg"] as const;
 
 export const HomeView = () => {
   return (

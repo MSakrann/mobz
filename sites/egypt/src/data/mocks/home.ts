@@ -67,19 +67,19 @@ export const heroContent: HeroContent = {
 
   media: {
     video: {
-      src: "/assets/egypt-assets/egypt-hero.jpg",
+      src: "/assets/egypt-assets/egypt-hero-live.jpg",
       alt: "Visit Egypt — aerial view across the landscape",
-      width: 1104,
-      height: 736,
+      width: 1198,
+      height: 672,
     },
     still: {
-      src: "/assets/egypt-assets/egypt-hero.jpg",
+      src: "/assets/egypt-assets/egypt-hero-live.jpg",
     },
     thumbnail: {
-      src: "/assets/egypt-assets/egypt-hero.jpg",
+      src: "/assets/egypt-assets/egypt-hero-live.jpg",
       alt: "Visit Egypt landscape",
-      width: 1104,
-      height: 736,
+      width: 1198,
+      height: 672,
     },
   },
 };
