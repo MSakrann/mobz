@@ -203,6 +203,18 @@ export const carouselContent: CarouselSectionContent = {
       year: "2026",
       image: "/assets/work/sodic.jpg",
     },
+    {
+      title: "House",
+      category: "Architecture",
+      year: "2026",
+      image: "/assets/work/house.jpg",
+    },
+    {
+      title: "Brewns",
+      category: "F&B",
+      year: "2026",
+      image: "/assets/work/brewns.jpg",
+    },
   ],
 };
 

@@ -1,0 +1,252 @@
+/* `source("../")` limits class detection to `src/` (this file lives in src/app).
+   Without it Tailwind v4 scans the whole repo — including obsidian/ and .claude/,
+   where documented class *patterns* like duration-[var(--duration-*)] parse as
+   real candidates and emit CSS warnings. Docs are not a source of utilities. */
+@import "tailwindcss" source("../");
+
+/* ---------------------------------------------------------------------------
+   TIER 1 — PRIMITIVES  (`--raw-*`)
+   Raw literal values. The only tier allowed to contain a hex/px/ms literal.
+   Never referenced in markup, never bound into @theme. Rename freely.
+   Grammar: --raw-<category>-<name>[-<shade>]
+   See obsidian/frontend/design-system.md → "Token naming convention".
+   --------------------------------------------------------------------------- */
+:root {
+  --raw-color-white: #ffffff;
+  --raw-color-black: #000000;
+
+  /* Keld Studio palette — lifted from the source site's style.css
+     (github.com/textura-agency/getlayers-house). The source wrote its glass
+     surfaces as rgba() of the two near-blacks below; the alpha now lives in the
+     utility (`bg-surface-glass/85`), so each colour is one token. */
+  --raw-color-neutral-950: #0a0b09; /* dock + contact-button glass */
+  --raw-color-neutral-900: #121311; /* glass hover, ECHO panel tint */
+  --raw-color-forest-900: #212623; /* footer ground under the photograph */
+  --raw-color-sand-100: #f4f0eb; /* client-stories surface */
+  --raw-color-sand-200: #e2ddd5; /* portrait placeholder */
+  --raw-color-ink-900: #2c2e2a; /* copy on sand */
+  --raw-color-sage-500: #646c61; /* muted accent on sand; the star's final colour */
+
+  --raw-duration-fast: 200ms; /* icon hovers — 0.2s in the source */
+  --raw-duration-normal: 350ms; /* buttons, dock, links — 0.3–0.35s */
+  --raw-duration-slow: 600ms; /* showreel grayscale → colour */
+
+  /* Type scale — the source's clamp() sizes evaluated at 1440, as rem on the
+     1440 grid base (px / 16). `-tablet` is the 1024 base, `-phone` the 360 one. */
+  --raw-font-size-display: 11.875rem; /* 190px — hero words, ECHO®, stats, preloader count */
+  --raw-font-size-display-tablet: 8.9375rem; /* 14vw on the 1024 base */
+  --raw-font-size-display-phone: 3.75rem; /* 60px */
+  --raw-font-size-stat-phone: 2.25rem; /* 36px — phone stats sit above the dock */
+  --raw-font-size-headline: 2.5rem; /* 40px — quote, footer CTA, zoom title (2.8vw) */
+  --raw-font-size-headline-phone: 1.625rem; /* 26px */
+  --raw-font-size-title: 2rem; /* 32px — ECHO labels, details title, preloader label (2.2vw) */
+  --raw-font-size-title-phone: 1.25rem; /* 20px */
+  --raw-font-size-lead: 1.125rem; /* 18px — author name, footer links (1.2vw) */
+  --raw-font-size-body: 1rem; /* 16px — descriptions, stat labels (1.1vw) */
+  --raw-font-size-body-phone: 0.875rem; /* 14px */
+  --raw-font-size-caption: 0.8125rem; /* 13px — tracked-out caps labels (0.85vw) */
+  --raw-font-size-badge: 0.6875rem; /* 11px — PLAY cursor badge */
+  --raw-font-size-quote-mark: 10rem; /* 160px */
+  --raw-font-size-quote-mark-phone: 5rem; /* 80px — the full mark leaves a void on a phone */
+  --raw-font-size-wordmark: 19.5vw; /* footer "Keld Studio" — fills the width by design */
+  --raw-font-size-wordmark-phone: 18vw;
+
+  --raw-leading-hero: 0.9; /* display words — never clipped, so under the 1.1 floor */
+  --raw-leading-wordmark: 0.75; /* the wordmark sits on the footer's bottom edge */
+  --raw-leading-heading: 1.15;
+  --raw-leading-copy: 1.5;
+
+  --raw-tracking-display: -0.04em;
+  --raw-tracking-title: -0.02em;
+  --raw-tracking-copy: -0.01em;
+  --raw-tracking-caps: 0.22em;
+  --raw-tracking-caps-wide: 0.25em;
+
+  /* Scene geometry — viewport-relative in the source, kept that way. */
+  --raw-size-showreel: 65vw; /* showreel frame before it zooms */
+  --raw-ratio-showreel: 65 / 37;
+  --raw-size-overlay-lead: 48vw; /* zoom-title column */
+  --raw-size-overlay-aside: 22vw; /* address column */
+  /* The star is laid out huge and scaled DOWN to its resting size, so its
+     final, screen-filling state is rasterised crisp rather than upsampled. */
+  --raw-size-star: 156.25rem; /* 2500px */
+  /* The fixed footer's height IS the scroll it takes to reveal it: the spacer
+     after the reviews and the footer read the same token, so they cannot drift. */
+  --raw-size-footer-reveal: 85vh;
+  --raw-size-wordmark-drop: calc(11vw - 12.5rem); /* seats the wordmark on the bottom edge */
+}
+
+/* ---------------------------------------------------------------------------
+   TIER 2 — SEMANTIC  (role names, no namespace prefix)
+   Purpose, not appearance. Always `var(--raw-*)` — never a literal.
+   This is the themeable layer. The site is single-theme by design — a dark
+   cinematic scene with one sand section — so there is no prefers-color-scheme
+   override; add one here, never in @theme, if that changes.
+   Grammar: --<role>[-<variant>][-<state>]
+   --------------------------------------------------------------------------- */
+:root {
+  --background: var(--raw-color-black);
+  --foreground: var(--raw-color-white);
+  --surface-glass: var(--raw-color-neutral-950);
+  --surface-glass-raised: var(--raw-color-neutral-900);
+  --surface-footer: var(--raw-color-forest-900);
+  --surface-inverse: var(--raw-color-sand-100);
+  --surface-inverse-sunken: var(--raw-color-sand-200);
+  --foreground-inverse: var(--raw-color-ink-900);
+  --foreground-inverse-muted: var(--raw-color-sage-500);
+
+  --duration-fast: var(--raw-duration-fast);
+  --duration-normal: var(--raw-duration-normal);
+  --duration-slow: var(--raw-duration-slow);
+
+  --font-size-display: var(--raw-font-size-display);
+  --font-size-display-tablet: var(--raw-font-size-display-tablet);
+  --font-size-display-phone: var(--raw-font-size-display-phone);
+  --font-size-stat-phone: var(--raw-font-size-stat-phone);
+  --font-size-headline: var(--raw-font-size-headline);
+  --font-size-headline-phone: var(--raw-font-size-headline-phone);
+  --font-size-title: var(--raw-font-size-title);
+  --font-size-title-phone: var(--raw-font-size-title-phone);
+  --font-size-lead: var(--raw-font-size-lead);
+  --font-size-body: var(--raw-font-size-body);
+  --font-size-body-phone: var(--raw-font-size-body-phone);
+  --font-size-caption: var(--raw-font-size-caption);
+  --font-size-badge: var(--raw-font-size-badge);
+  --font-size-quote-mark: var(--raw-font-size-quote-mark);
+  --font-size-quote-mark-phone: var(--raw-font-size-quote-mark-phone);
+  --font-size-wordmark: var(--raw-font-size-wordmark);
+  --font-size-wordmark-phone: var(--raw-font-size-wordmark-phone);
+
+  --line-height-hero: var(--raw-leading-hero);
+  --line-height-wordmark: var(--raw-leading-wordmark);
+  --line-height-heading: var(--raw-leading-heading);
+  --line-height-copy: var(--raw-leading-copy);
+
+  --letter-spacing-display: var(--raw-tracking-display);
+  --letter-spacing-title: var(--raw-tracking-title);
+  --letter-spacing-copy: var(--raw-tracking-copy);
+  --letter-spacing-caps: var(--raw-tracking-caps);
+  --letter-spacing-caps-wide: var(--raw-tracking-caps-wide);
+
+  --size-showreel: var(--raw-size-showreel);
+  --ratio-showreel: var(--raw-ratio-showreel);
+  --size-overlay-lead: var(--raw-size-overlay-lead);
+  --size-overlay-aside: var(--raw-size-overlay-aside);
+  --size-star: var(--raw-size-star);
+  --size-footer-reveal: var(--raw-size-footer-reveal);
+  --size-wordmark-drop: var(--raw-size-wordmark-drop);
+}
+
+/* ---------------------------------------------------------------------------
+   THEME BINDINGS — map semantic tokens into Tailwind namespaces.
+   Every entry is exactly `--<tw-namespace>-<role>: var(--<role>)`.
+   `inline` is required: it inlines the var() into each utility, so any Tier 2
+   override cascades. Binding a literal here instead would freeze the value.
+
+   Only these namespaces generate utilities (verified against tailwindcss
+   v4.3.3): --color-* --spacing-* --radius-* --leading-* --tracking-* --text-*
+   --font-* --ease-* --breakpoint-* --container-* --shadow-* --blur-* --animate-*
+   --aspect-*
+   NOTE: there is NO --duration-* namespace in v4 — `duration-fast` compiles to
+   nothing. Durations stay Tier 2 only and are used as duration-[var(--duration-fast)].
+   --------------------------------------------------------------------------- */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface-glass: var(--surface-glass);
+  --color-surface-glass-raised: var(--surface-glass-raised);
+  --color-surface-footer: var(--surface-footer);
+  --color-surface-inverse: var(--surface-inverse);
+  --color-surface-inverse-sunken: var(--surface-inverse-sunken);
+  --color-foreground-inverse: var(--foreground-inverse);
+  --color-foreground-inverse-muted: var(--foreground-inverse-muted);
+  --font-sans: var(--font-instrument-sans);
+
+  --text-display: var(--font-size-display);
+  --text-display-tablet: var(--font-size-display-tablet);
+  --text-display-phone: var(--font-size-display-phone);
+  --text-stat-phone: var(--font-size-stat-phone);
+  --text-headline: var(--font-size-headline);
+  --text-headline-phone: var(--font-size-headline-phone);
+  --text-title: var(--font-size-title);
+  --text-title-phone: var(--font-size-title-phone);
+  --text-lead: var(--font-size-lead);
+  --text-body: var(--font-size-body);
+  --text-body-phone: var(--font-size-body-phone);
+  --text-caption: var(--font-size-caption);
+  --text-badge: var(--font-size-badge);
+  --text-quote-mark: var(--font-size-quote-mark);
+  --text-quote-mark-phone: var(--font-size-quote-mark-phone);
+  --text-wordmark: var(--font-size-wordmark);
+  --text-wordmark-phone: var(--font-size-wordmark-phone);
+
+  /* Leading floor for clipped TextEngine reveals — see
+     obsidian/frontend/text-engine.md → "Alignment & line-height". */
+  --leading-display: 1.1;
+  --leading-hero: var(--line-height-hero);
+  --leading-wordmark: var(--line-height-wordmark);
+  --leading-heading: var(--line-height-heading);
+  --leading-copy: var(--line-height-copy);
+
+  --tracking-display: var(--letter-spacing-display);
+  --tracking-title: var(--letter-spacing-title);
+  --tracking-copy: var(--letter-spacing-copy);
+  --tracking-caps: var(--letter-spacing-caps);
+  --tracking-caps-wide: var(--letter-spacing-caps-wide);
+
+  --ease-entrance: cubic-bezier(0.2, 0, 0, 1);
+  /* The source's hover curve (easeOutQuart) — buttons, dock, showreel. */
+  --ease-glide: cubic-bezier(0.25, 1, 0.5, 1);
+
+  --container-showreel: var(--size-showreel);
+  --container-overlay-lead: var(--size-overlay-lead);
+  --container-overlay-aside: var(--size-overlay-aside);
+  --container-star: var(--size-star);
+  --aspect-showreel: var(--ratio-showreel);
+  --spacing-footer-reveal: var(--size-footer-reveal);
+  --spacing-wordmark-drop: var(--size-wordmark-drop);
+}
+
+@layer base {
+  /* Adaptive scaling grid — scales the root font-size with the viewport so a
+     rem-based layout stays proportional. Each band divides FONT_BASE (16px) by
+     the design base width its range was laid out at:
+       font-size: 16 * 100 / baseWidth  (vw)
+     The design is authored at 1440, so there is no 1920 band: above 1440 the
+     AdaptiveGrid component takes over (damped scale-up).
+     Keep in sync with src/components/common/grid/grid.config.ts. */
+  html {
+    font-size: 16px;
+  }
+
+  @media (max-width: 1440px) {
+    html {
+      font-size: 1.111111vw; /* 16 * 100 / 1440 */
+    }
+  }
+
+  @media (max-width: 1024px) {
+    html {
+      font-size: 1.5625vw; /* 16 * 100 / 1024 */
+    }
+  }
+
+  @media (max-width: 640px) {
+    html {
+      font-size: 4.444444vw; /* 16 * 100 / 360 */
+    }
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+}
+
+@layer components {
+}

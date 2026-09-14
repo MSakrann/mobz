@@ -23,7 +23,9 @@
       "@egypt/*": ["./sites/egypt/src/*"],
       "@sodic/*": ["./sites/sodic/src/*"],
       "@clothing/*": ["./sites/clothing/src/*"],
-      "@drape/*": ["./sites/drape/*"]
+      "@drape/*": ["./sites/drape/*"],
+      "@house/*": ["./sites/house/src/*"],
+      "@brewns/*": ["./sites/brewns/src/*"]
     }
   },
   "include": [
@@ -34,5 +36,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "mobz"]
 }
