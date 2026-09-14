@@ -128,7 +128,7 @@ const NAV_LINKS: readonly LinkItem[] = [
 ];
 
 export const homeContent: HomeContent = {
-  preloader: { label: "Keld Studio" },
+  preloader: { label: "Mobz Studio" },
   sceneLabel: "House showcase",
   poster: {
     src: FRAME_POSTER,
