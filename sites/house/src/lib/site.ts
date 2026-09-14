@@ -7,9 +7,9 @@
 import { publicEnv } from "@house/env";
 
 export const siteConfig = {
-  name: "Keld Studio",
+  name: "Mobz Studio",
   /** Default document title — the brand plus the page's own h1. */
-  title: "Keld Studio — Harmony in House",
+  title: "Mobz Studio — Harmony in House",
   description:
     "A cinematic journey through premium architectural forms, exquisite glass craft, and bespoke minimalist living spaces.",
   /**
@@ -21,7 +21,7 @@ export const siteConfig = {
   ogImage: "/assets/house/open-graph.png",
   /** No handle is known for the studio; empty omits the Twitter site/creator tags. */
   twitterHandle: "",
-  author: "Keld Studio",
+  author: "Mobz Studio",
   /** Browser theme-color (address bar / PWA). */
   themeColor: "#000000",
 } as const;

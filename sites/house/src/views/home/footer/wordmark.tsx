@@ -14,7 +14,7 @@ export interface WordmarkProps {
 }
 
 /**
- * The giant "Keld Studio" seated on the footer's bottom edge. Its letters rise
+ * The giant "Mobz Studio" seated on the footer's bottom edge. Its letters rise
  * as the footer is uncovered, in two voices (see `utils/timeline/footer.ts`).
  *
  * The one letter animation here that is not TextEngine: its letters follow two

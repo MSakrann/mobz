@@ -1,5 +1,5 @@
 /**
- * Home page content — Keld Studio.
+ * Home page content — Mobz Studio.
  *
  * The copy is carried over verbatim from the source site
  * (github.com/textura-agency/getlayers-house, `index.html`); only alt text was
@@ -208,7 +208,7 @@ export const homeContent: HomeContent = {
     showreel: {
       src: "/assets/house/scene/showreel.mp4",
       poster: "/assets/house/scene/showreel-poster.webp",
-      label: "Keld Studio showreel",
+      label: "Mobz Studio showreel",
       badge: "Play",
     },
   },
@@ -236,7 +236,7 @@ export const homeContent: HomeContent = {
     contact: { label: "Contact", href: "#contact" },
     navLabel: "Footer",
     links: NAV_LINKS,
-    wordmark: "Keld Studio",
+    wordmark: "Mobz Studio",
     background: {
       src: "/assets/house/footer/footer-bg.webp",
       alt: "",
@@ -246,7 +246,7 @@ export const homeContent: HomeContent = {
   },
   dock: {
     title: "Home",
-    homeLabel: "Keld Studio — back to top",
+    homeLabel: "Mobz Studio — back to top",
     navLabel: "Primary",
     openLabel: "Open menu",
     closeLabel: "Close menu",
