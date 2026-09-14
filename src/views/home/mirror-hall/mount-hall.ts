@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { CSS3DObject, CSS3DRenderer } from "three/addons/renderers/CSS3DRenderer.js";
 
 import type { WorkCard } from "@/data/work-projects";
+import { prefersLowPowerGpu, readRuntimeEnv } from "@/utils/landing-runtime";
 
 export type MountHallOptions = {
   cards: WorkCard[];
@@ -121,18 +122,18 @@ export function mountMirrorHall(
   opts: MountHallOptions,
 ): () => void {
   const { cards, onNavigate, reducedMotion, section } = opts;
-  const mobile = window.matchMedia("(pointer: coarse)").matches;
+  const constrained = prefersLowPowerGpu(readRuntimeEnv(window));
   const canvas = document.createElement("canvas");
   host.appendChild(canvas);
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
-    antialias: !mobile,
+    antialias: !constrained,
     alpha: false,
-    powerPreference: mobile ? "low-power" : "high-performance",
+    powerPreference: constrained ? "low-power" : "high-performance",
     failIfMajorPerformanceCaveat: false,
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1 : 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, constrained ? 1 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const DPR = renderer.getPixelRatio();
 
@@ -173,7 +174,7 @@ export function mountMirrorHall(
   camera.lookAt(lookTarget);
 
   {
-    const N = mobile ? 180 : 700;
+    const N = constrained ? 180 : 700;
     const pos = new Float32Array(N * 3);
     let seed = 1234.5;
     const rnd = () => {
@@ -697,7 +698,7 @@ export function mountMirrorHall(
     }
     wu.uTime.value = t;
     wu.uCamPos.value.copy(camera.position);
-    if (!mobile) updateReflection();
+    if (!constrained) updateReflection();
     renderer.render(scene, camera);
     syncLabels();
     css3d.render(scene, camera);

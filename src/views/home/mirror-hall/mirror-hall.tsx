@@ -4,6 +4,7 @@ import { Open_Sans } from "next/font/google";
 import { useEffect, useRef } from "react";
 
 import { LIVE_WORK_CARDS, WORK_CARDS } from "@/data/work-projects";
+import { shouldStartHeavyMedia } from "@/utils/landing-runtime";
 import { usePreloader } from "../preloader-store";
 import { consumeLandingReturn, markLandingReturn } from "../reload-on-back";
 
@@ -22,7 +23,7 @@ export const MirrorHall = () => {
   const numRef = useRef<HTMLSpanElement>(null);
   const totalRef = useRef<HTMLSpanElement>(null);
   const dotsRef = useRef<HTMLDivElement>(null);
-  const mediaReady = usePreloader((s) => s.phase !== "loading");
+  const mediaReady = usePreloader((s) => shouldStartHeavyMedia(s.phase));
 
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
