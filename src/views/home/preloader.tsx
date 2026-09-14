@@ -49,7 +49,7 @@ export const Preloader = () => {
   }, [setPhase, startScroll, stopScroll]);
 
   useEffect(() => {
-    if (phase === "done") markPreloaderDone();
+    if (phase === "revealing" || phase === "done") markPreloaderDone();
   }, [phase]);
 
   const playing = gate === "play";

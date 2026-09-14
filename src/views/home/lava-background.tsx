@@ -12,6 +12,7 @@ import { useEffect, useRef } from "react";
 
 import { useLoop } from "@/hooks/animation/use-render-loop";
 import { LavaConfig } from "@/data/mocks/home";
+import { shouldStartHeavyMedia } from "@/utils/landing-runtime";
 import { usePreloader } from "./preloader-store";
 
 export interface LavaBackgroundProps {
@@ -199,7 +200,7 @@ export const LavaBackground = ({ config }: LavaBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stateRef = useRef<GlState | null>(null);
   const visible = useRef(false);
-  const mediaReady = usePreloader((s) => s.phase !== "loading");
+  const mediaReady = usePreloader((s) => shouldStartHeavyMedia(s.phase));
 
   useEffect(() => {
     if (!mediaReady) return;
